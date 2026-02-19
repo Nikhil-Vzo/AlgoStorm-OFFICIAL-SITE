@@ -1,30 +1,3 @@
-// Team member images
-import aditya from '../assets/images/team-img/piratage_photos/aditya.jpg';
-import anshu from '../assets/images/team-img/piratage_photos/anshu.jpg';
-import anushka from '../assets/images/team-img/piratage_photos/anushka.jpg';
-import ashutosh from '../assets/images/team-img/piratage_photos/ashutosh.webp';
-import atharav from '../assets/images/team-img/piratage_photos/atharav.webp';
-import biswajit from '../assets/images/team-img/piratage_photos/biswajit.jpg';
-import gourav from '../assets/images/team-img/piratage_photos/gourav.jpeg';
-import jiya from '../assets/images/team-img/piratage_photos/jiya.jpg';
-import kartik from '../assets/images/team-img/piratage_photos/kartik.webp';
-import komal from '../assets/images/team-img/piratage_photos/komal.jpg';
-import manisha from '../assets/images/team-img/piratage_photos/manisha.webp';
-import naman from '../assets/images/team-img/piratage_photos/naman.jpeg';
-import nibedita from '../assets/images/team-img/piratage_photos/nibedita.webp';
-import nitin from '../assets/images/team-img/piratage_photos/nitin.webp';
-import rupendra from '../assets/images/team-img/piratage_photos/rupendra.jpg';
-import sakshi from '../assets/images/team-img/piratage_photos/sakshi.webp';
-import shraddha from '../assets/images/team-img/piratage_photos/shraddha.jpg';
-import shreya from '../assets/images/team-img/piratage_photos/shreya.webp';
-import shruti from '../assets/images/team-img/piratage_photos/shruti.jpg';
-import swati from '../assets/images/team-img/piratage_photos/swati.jpg';
-import tushar from '../assets/images/team-img/piratage_photos/tushar.webp';
-import ujjawal from '../assets/images/team-img/piratage_photos/ujjawal.jpg';
-import yash from '../assets/images/team-img/piratage_photos/yash.jpg';
-import yogesh from '../assets/images/team-img/piratage_photos/yogesh.webp';
-import yuti from '../assets/images/team-img/piratage_photos/yuti.jpg';
-
 export interface TeamMember {
     id: number;
     name: string;
@@ -44,17 +17,17 @@ const teamCategories: TeamCategory[] = [
         id: 'leadership',
         name: 'Leadership',
         members: [
-            { id: 0, name: 'Vinay Ku. Singh', role: 'DY. Director' },
-            { id: -1, name: 'Kranti Ku. Dewangan', role: 'HOD' },
-            { id: -2, name: 'Pawan Kumar', role: 'Faculty Co-ordinator' },
+            { id: 0, name: 'Vinay Ku. Singh', role: 'DY. Director', image: 'https://i.ibb.co/9LHPV8M/vinay.jpg' },
+            { id: -1, name: 'Kranti Ku. Dewangan', role: 'HOD', image: 'https://i.ibb.co/1ttL40tN/kranti.jpg' },
+            { id: -2, name: 'Pawan Kumar', role: 'Faculty Co-ordinator', image: 'https://i.ibb.co/GQ5bDgjL/pawan.jpg' },
         ],
     },
     {
         id: 'overall',
         name: 'Overall',
         members: [
-            { id: 1, name: 'Nitin Kumar Singh', image: nitin },
-            { id: 2, name: 'Biswajit Nayak', image: biswajit },
+            { id: 1, name: 'Nitin Kumar Singh', image: 'https://i.ibb.co/G3N1WkmM/nitin.webp' },
+            { id: 2, name: 'Biswajit Nayak', image: 'https://i.ibb.co/ds7SL7w8/biswajit.jpg' },
         ],
     },
     {
@@ -68,59 +41,59 @@ const teamCategories: TeamCategory[] = [
         id: 'design',
         name: 'Design',
         members: [
-            { id: 4, name: 'Aditya Chourasia', lead: true, image: aditya },
-            { id: 5, name: 'Ashutosh Sahu', image: ashutosh },
-            { id: 6, name: 'Atharav Pratap Singh', image: atharav },
-            { id: 7, name: 'Rupendra Kumar Sahu', image: rupendra },
+            { id: 4, name: 'Aditya Chourasia', lead: true, image: 'https://i.ibb.co/VcJxRMY5/aditya.jpg' },
+            { id: 5, name: 'Ashutosh Sahu', image: 'https://i.ibb.co/8LKhhz9f/ashutosh.webp' },
+            { id: 6, name: 'Atharav Pratap Singh', image: 'https://i.ibb.co/tTbqbnjt/athrav.webp' },
+            { id: 7, name: 'Rupendra Kumar Sahu', image: 'https://i.ibb.co/gM28D0QT/rupendra.jpg' },
         ],
     },
     {
         id: 'social-media',
         name: 'Social Media',
         members: [
-            { id: 8, name: 'Gourav Kumar Behera', lead: true, image: gourav },
-            { id: 9, name: 'Tushar Shendey', image: tushar },
-            { id: 10, name: 'Shreya Barde', image: shreya },
-            { id: 11, name: 'Jiya Dhand', image: jiya },
-            { id: 12, name: 'Komal Meghani', image: komal },
+            { id: 8, name: 'Gourav Kumar Behera', lead: true, image: 'https://i.ibb.co/KcQbJGFm/gourav.jpg' },
+            { id: 9, name: 'Tushar Shendey', image: 'https://i.ibb.co/YFhmKWyS/tushar.webp' },
+            { id: 10, name: 'Shreya Barde', image: 'https://i.ibb.co/xSv1W4wb/shreya.webp' },
+            { id: 11, name: 'Jiya Dhand', image: 'https://i.ibb.co/JjP46w9x/jiya.jpg' },
+            { id: 12, name: 'Komal Meghani', image: 'https://i.ibb.co/Vcf6YSvk/komal.jpg' },
         ],
     },
     {
         id: 'financial-sponsorship',
         name: 'Financial & Sponsorship',
         members: [
-            { id: 13, name: 'Manisha Biswal', image: manisha },
-            { id: 14, name: 'Naman Kumar', image: naman },
-            { id: 15, name: 'Anshu', image: anshu },
+            { id: 13, name: 'Manisha Biswal', image: 'https://i.ibb.co/x83zN0Yp/manisha.webp' },
+            { id: 14, name: 'Naman Kumar', image: 'https://i.ibb.co/C5h6j04q/naman.jpg' },
+            { id: 15, name: 'Anshu', image: 'https://i.ibb.co/1htHgWY/anshu.jpg' },
         ],
     },
     {
         id: 'logistics-hospitality',
         name: 'Logistics & Hospitality',
         members: [
-            { id: 16, name: 'Yuti Sasane', lead: true, image: yuti },
-            { id: 17, name: 'Ujjawal Singh', image: ujjawal },
-            { id: 18, name: 'Shruti Kumari', image: shruti },
-            { id: 19, name: 'Kartik Shreekumar', image: kartik },
-            { id: 20, name: 'Yogesh Sunil Wathe', image: yogesh },
+            { id: 16, name: 'Yuti Sasane', lead: true, image: 'https://i.ibb.co/KxGKmQC6/yuti.jpg' },
+            { id: 17, name: 'Ujjawal Singh', image: 'https://i.ibb.co/cht2bcnx/ujjawal.jpg' },
+            { id: 18, name: 'Shruti Kumari', image: 'https://i.ibb.co/pjWBWNz8/shruti.jpg' },
+            { id: 19, name: 'Kartik Shreekumar', image: 'https://i.ibb.co/prKT7pLB/kartik.webp' },
+            { id: 20, name: 'Yogesh Sunil Wathe', image: 'https://i.ibb.co/nsZ0y4C6/yogesh.webp' },
         ],
     },
     {
         id: 'registration',
         name: 'Registration Committee',
         members: [
-            { id: 21, name: 'Sakshi Bhatt', image: sakshi },
-            { id: 22, name: 'Anushka Choudhary', image: anushka },
-            { id: 23, name: 'Swati Agrawal', image: swati },
-            { id: 24, name: 'Nibedita Patel', image: nibedita },
+            { id: 21, name: 'Sakshi Bhatt', image: 'https://i.ibb.co/d4PJy9kS/sakshi.webp' },
+            { id: 22, name: 'Anushka Choudhary', image: 'https://i.ibb.co/kgRntqSs/anushka.jpg' },
+            { id: 23, name: 'Swati Agrawal', image: 'https://i.ibb.co/wr4sW6wJ/swati.jpg' },
+            { id: 24, name: 'Nibedita Patel', image: 'https://i.ibb.co/Y7XJ6hh5/nibedita.webp' },
         ],
     },
     {
         id: 'volunteering-support',
         name: 'Volunteering & Support',
         members: [
-            { id: 25, name: 'Shraddha Sahu', lead: true, image: shraddha },
-            { id: 26, name: 'Yash Bhikhwani', image: yash },
+            { id: 25, name: 'Shraddha Sahu', lead: true, image: 'https://i.ibb.co/QjJrZ1mW/shraddha.jpg' },
+            { id: 26, name: 'Yash Bhikhwani', image: 'https://i.ibb.co/pBtqVx89/yash.jpg' },
         ],
     },
 ];
