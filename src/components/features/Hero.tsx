@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
-import heroImg from '../../assets/images/hero-img.svg';
-import faceImg from '../../assets/images/face-1.png';
-import heistOverlay from '../../assets/images/heist-overlay.svg';
+const heroImg = 'https://i.ibb.co/RGvQ3hSm/hero-img.jpg';
+const faceImg = 'https://i.ibb.co/LXMJ1wXV/face-1.png';
+const heistOverlay = 'https://i.ibb.co/0j9P5pqN/heist-overlay.jpg';
 import { HyperText } from '../ui/HyperText';
 import './Hero.css';
 
