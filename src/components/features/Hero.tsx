@@ -5,7 +5,11 @@ import heistOverlay from '../../assets/images/heist-overlay.svg';
 import { HyperText } from '../ui/HyperText';
 import './Hero.css';
 
-export default function Hero() {
+interface HeroProps {
+    loading?: boolean;
+}
+
+export default function Hero({ loading = false }: HeroProps) {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
@@ -62,24 +66,33 @@ export default function Hero() {
             {/* ── Layer 3: Main Title Text ── */}
             <div className="hero__title-wrap" style={parallax(-15)}>
                 <h1 className="hero__title">
-                    <HyperText
-                        as="span"
-                        className="hero__title-algo"
-                        duration={1000}
-                        delay={200}
-                        animateOnHover={true}
-                    >
-                        ALGO
-                    </HyperText>
-                    <HyperText
-                        as="span"
-                        className="hero__title-storm"
-                        duration={1000}
-                        delay={600}
-                        animateOnHover={true}
-                    >
-                        STORM
-                    </HyperText>
+                    {loading ? (
+                        <>
+                            <span className="hero__title-algo">ALGO</span>
+                            <span className="hero__title-storm">STORM</span>
+                        </>
+                    ) : (
+                        <>
+                            <HyperText
+                                as="span"
+                                className="hero__title-algo"
+                                duration={1000}
+                                delay={200}
+                                animateOnHover={true}
+                            >
+                                ALGO
+                            </HyperText>
+                            <HyperText
+                                as="span"
+                                className="hero__title-storm"
+                                duration={1000}
+                                delay={600}
+                                animateOnHover={true}
+                            >
+                                STORM
+                            </HyperText>
+                        </>
+                    )}
                 </h1>
             </div>
 

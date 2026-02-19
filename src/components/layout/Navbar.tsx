@@ -40,15 +40,15 @@ export default function Navbar() {
         {/* Desktop Links */}
         <div className="navbar__links">
           {navLinks.map((link) => (
-            <a key={link.label} href={link.href} className="navbar__link">
-              {link.label}
+            <a key={link.label} href={link.href} className="nav-btn">
+              <span className="nav-btn__inner">{link.label}</span>
             </a>
           ))}
         </div>
 
         {/* CTA */}
-        <a href="#register" className="navbar__cta">
-          Join the Heist
+        <a href="#register" className="nav-btn nav-btn--cta">
+          <span className="nav-btn__inner nav-btn__inner--cta">Join the Heist</span>
         </a>
 
         {/* Mobile Toggle */}
@@ -75,14 +75,14 @@ export default function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                className="navbar__mobile-link"
+                className="nav-btn nav-btn--mobile"
                 onClick={() => setMobileOpen(false)}
               >
-                {link.label}
+                <span className="nav-btn__inner">{link.label}</span>
               </a>
             ))}
-            <a href="#register" className="navbar__cta navbar__cta--mobile" onClick={() => setMobileOpen(false)}>
-              Join the Heist
+            <a href="#register" className="nav-btn nav-btn--cta nav-btn--mobile-cta" onClick={() => setMobileOpen(false)}>
+              <span className="nav-btn__inner nav-btn__inner--cta">Join the Heist</span>
             </a>
           </motion.div>
         )}
@@ -90,3 +90,4 @@ export default function Navbar() {
     </motion.nav>
   );
 }
+
