@@ -2,10 +2,10 @@ import { Heart, Instagram, Github, Linkedin, Mail, MapPin, Calendar } from 'luci
 import './Footer.css';
 
 const socials = [
-    { icon: Instagram, href: 'https://instagram.com/algostorm', label: 'Instagram' },
-    { icon: Github, href: 'https://github.com/algostorm', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com/company/algostorm', label: 'LinkedIn' },
-    { icon: Mail, href: 'mailto:algostorm@example.com', label: 'Email' },
+    { icon: Instagram, href: 'https://instagram.com/', label: 'Instagram' },
+    { icon: Github, href: 'https://github.com/', label: 'GitHub' },
+    { icon: Linkedin, href: 'https://linkedin.com/company/', label: 'LinkedIn' },
+    { icon: Mail, href: 'mailto:', label: 'Email' },
 ];
 
 export default function Footer() {

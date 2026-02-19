@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import heroImg from '../../assets/images/hero-img.svg';
 import faceImg from '../../assets/images/face-1.png';
 import heistOverlay from '../../assets/images/heist-overlay.svg';
+import { HyperText } from '../ui/HyperText';
 import './Hero.css';
 
 export default function Hero() {
@@ -47,6 +48,11 @@ export default function Hero() {
                 <span className="hero__year-digit hero__year-right">6</span>
             </div>
 
+            {/* ── Mobile Version Text (For Phones Only) ── */}
+            <div className="hero__mobile-version">
+                <span className="hero__mobile-version-text">2.0</span>
+            </div>
+
             {/* ── Hidden year digits (peek behind hero figure) ── */}
             <div className="hero__year-hidden" style={parallax(-10)}>
                 <span className="hero__year-digit-hidden">0</span>
@@ -56,8 +62,24 @@ export default function Hero() {
             {/* ── Layer 3: Main Title Text ── */}
             <div className="hero__title-wrap" style={parallax(-15)}>
                 <h1 className="hero__title">
-                    <span className="hero__title-algo">ALGO</span>
-                    <span className="hero__title-storm">STORM</span>
+                    <HyperText
+                        as="span"
+                        className="hero__title-algo"
+                        duration={1000}
+                        delay={200}
+                        animateOnHover={true}
+                    >
+                        ALGO
+                    </HyperText>
+                    <HyperText
+                        as="span"
+                        className="hero__title-storm"
+                        duration={1000}
+                        delay={600}
+                        animateOnHover={true}
+                    >
+                        STORM
+                    </HyperText>
                 </h1>
             </div>
 
