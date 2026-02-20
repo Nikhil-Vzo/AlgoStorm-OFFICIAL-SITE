@@ -32,31 +32,34 @@ export default function Season1Recap() {
         // Force GPU layers
         gsap.set(imgs, { force3D: true });
 
+        // Initial state for text
+        gsap.set(textWrap, { opacity: 0, yPercent: 10 });
+
         const tl = gsap.timeline({
             scrollTrigger: {
-                trigger: wrapper,           // The tall wrapper drives progress
+                trigger: wrapper,
                 start: 'top top',
-                end: 'bottom bottom',       // Scroll the full height of the wrapper
-                scrub: 0.8,                 // Smooth scrub
-                // NO pin! CSS sticky handles that
+                end: 'bottom bottom',
+                scrub: 0.8,
             },
         });
 
-        // ── Phase 1 (0→0.45): Images fly in ──
-        tl.fromTo(imgs[0], { xPercent: -200, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.12, ease: 'power3.out' }, 0);
-        tl.fromTo(imgs[1], { xPercent: 200, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.12, ease: 'power3.out' }, 0.05);
-        tl.fromTo(imgs[2], { xPercent: -180, yPercent: 80, opacity: 0 }, { xPercent: 0, yPercent: 0, opacity: 1, duration: 0.12, ease: 'power3.out' }, 0.10);
-        tl.fromTo(imgs[3], { xPercent: 200, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.12, ease: 'power3.out' }, 0.15);
-        tl.fromTo(imgs[4], { yPercent: 200, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.12, ease: 'power3.out' }, 0.20);
-        tl.fromTo(imgs[5], { xPercent: 180, yPercent: 120, opacity: 0 }, { xPercent: 0, yPercent: 0, opacity: 1, duration: 0.12, ease: 'power3.out' }, 0.25);
+        // ── Phase 1 (0→0.15): Main Typography appears first ──
+        tl.to(textWrap, { opacity: 1, yPercent: 0, duration: 0.15, ease: 'power2.out' }, 0);
+        tl.fromTo(glow, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: 'power2.inOut' }, 0);
 
-        // ── Phase 1b: Red glow fades in behind text ──
-        tl.fromTo(glow, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.inOut' }, 0.05);
+        // ── Phase 2 (0.15→0.45): Images slide in aggressively behind the text ──
+        tl.from(imgs[0], { xPercent: -200, duration: 0.12, ease: 'power3.out' }, 0.15);
+        tl.from(imgs[1], { xPercent: 200, duration: 0.12, ease: 'power3.out' }, 0.20);
+        tl.from(imgs[2], { xPercent: -180, yPercent: 80, duration: 0.12, ease: 'power3.out' }, 0.25);
+        tl.from(imgs[3], { xPercent: 200, duration: 0.12, ease: 'power3.out' }, 0.30);
+        tl.from(imgs[4], { yPercent: 200, duration: 0.12, ease: 'power3.out' }, 0.35);
+        tl.from(imgs[5], { xPercent: 180, yPercent: 120, duration: 0.12, ease: 'power3.out' }, 0.40);
 
-        // ── Phase 2 (0.35→0.45): Description appears ──
-        tl.fromTo(desc, { opacity: 0, yPercent: 30 }, { opacity: 1, yPercent: 0, duration: 0.10, ease: 'power2.out' }, 0.38);
+        // ── Phase 3 (0.45→0.50): Description appears ──
+        tl.fromTo(desc, { opacity: 0, yPercent: 30 }, { opacity: 1, yPercent: 0, duration: 0.10, ease: 'power2.out' }, 0.45);
 
-        // ── Phase 3 (0.50→0.72): Gentle parallax drift ──
+        // ── Phase 4 (0.50→0.72): Gentle parallax drift ──
         tl.to(imgs[0], { xPercent: -12, yPercent: -10, duration: 0.22, ease: 'none' }, 0.50);
         tl.to(imgs[1], { xPercent: 12, yPercent: -8, duration: 0.22, ease: 'none' }, 0.50);
         tl.to(imgs[2], { xPercent: -16, yPercent: 8, duration: 0.22, ease: 'none' }, 0.50);
@@ -64,7 +67,7 @@ export default function Season1Recap() {
         tl.to(imgs[4], { xPercent: -8, yPercent: 16, duration: 0.22, ease: 'none' }, 0.50);
         tl.to(imgs[5], { xPercent: 14, yPercent: 14, duration: 0.22, ease: 'none' }, 0.50);
 
-        // ── Phase 4 (0.75→1.0): Everything fades out smoothly ──
+        // ── Phase 5 (0.75→1.0): Everything fades out smoothly ──
         tl.to(imgs, { opacity: 0, scale: 0.92, duration: 0.18, ease: 'power2.inOut', stagger: 0.01 }, 0.75);
         tl.to(textWrap, { opacity: 0, yPercent: -15, duration: 0.12, ease: 'power2.in' }, 0.80);
         tl.to(desc, { opacity: 0, yPercent: -10, duration: 0.10, ease: 'power2.in' }, 0.82);

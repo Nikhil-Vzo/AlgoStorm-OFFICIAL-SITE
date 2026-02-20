@@ -36,52 +36,85 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--color-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    background-color: var(--color-background);
+    border: 6px solid #e0e0e0;
+    border-bottom-width: 24px;
+    /* Polaroid/dossier feel */
+    border-radius: 2px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+
+    /* Money Heist intense cinematic filter */
+    filter: grayscale(80%) contrast(1.2) brightness(0.8) sepia(20%);
 }
 
-/* Positions — deliberate asymmetry for collage feel */
+.s1-img:hover img {
+    filter: grayscale(0%) contrast(1.1) brightness(1) sepia(0%);
+    transform: scale(1.05);
+}
+
+/* Semi-transparent "Tape" holding the photos */
+.s1-img::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-5deg);
+    width: 60px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+/* Positions & Scattered Dossier Rotations */
 .s1-img--1 {
     width: 260px;
-    height: 175px;
-    top: 6%;
-    left: 4%;
+    height: 220px;
+    top: -2%;
+    left: -2%;
+    transform: rotate(6deg) !important;
 }
 
 .s1-img--2 {
     width: 240px;
-    height: 165px;
-    top: 10%;
-    right: 5%;
+    height: 200px;
+    top: 5%;
+    right: -4%;
+    transform: rotate(-8deg) !important;
 }
 
 .s1-img--3 {
     width: 250px;
-    height: 168px;
-    top: 52%;
-    left: 3%;
+    height: 260px;
+    top: 40%;
+    left: -5%;
+    transform: rotate(-5deg) !important;
 }
 
 .s1-img--4 {
     width: 230px;
-    height: 155px;
-    top: 42%;
-    right: 4%;
+    height: 220px;
+    top: 45%;
+    right: -3%;
+    transform: rotate(10deg) !important;
 }
 
 .s1-img--5 {
-    width: 255px;
-    height: 170px;
-    bottom: 6%;
-    left: 35%;
+    width: 250px;
+    height: 230px;
+    bottom: 2%;
+    left: 15%;
+    transform: rotate(4deg) !important;
 }
 
 .s1-img--6 {
-    width: 215px;
-    height: 148px;
-    bottom: 9%;
-    right: 7%;
+    width: 220px;
+    height: 200px;
+    bottom: -3%;
+    right: 12%;
+    transform: rotate(-6deg) !important;
 }
 
 /* Wrapper handles absolute positioning and GSAP animations */
@@ -107,12 +140,13 @@
     padding: 40px 60px;
     border-radius: var(--radius-lg, 24px);
 
-    /* Heavy Glassmorphism backing to completely block out image interference */
-    background: rgba(5, 5, 5, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    /* Intense red-tinted glass plate */
+    background: rgba(10, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(229, 9, 20, 0.2);
+    border-top: 1px solid rgba(229, 9, 20, 0.4);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(229, 9, 20, 0.05);
 }
 
 /* "SEASON 1" tag */
