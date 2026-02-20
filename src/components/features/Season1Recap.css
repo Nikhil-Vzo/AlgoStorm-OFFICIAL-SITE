@@ -6,7 +6,7 @@
 /* Tall wrapper — its height is what drives the scroll progress */
 .s1-wrapper {
     position: relative;
-    height: 300vh;
+    height: 380vh;
     background: var(--color-background);
 }
 
@@ -72,8 +72,8 @@
 .s1-img--1 {
     width: 260px;
     height: 220px;
-    top: -2%;
-    left: -2%;
+    top: 5%;
+    left: 8%;
 }
 
 .s1-img--1 img {
@@ -89,8 +89,8 @@
 .s1-img--2 {
     width: 240px;
     height: 200px;
-    top: 5%;
-    right: -4%;
+    top: 12%;
+    right: 6%;
 }
 
 .s1-img--2 img {
@@ -104,8 +104,8 @@
 .s1-img--3 {
     width: 250px;
     height: 260px;
-    top: 40%;
-    left: -5%;
+    top: 45%;
+    left: 5%;
 }
 
 .s1-img--3 img {
@@ -119,8 +119,8 @@
 .s1-img--4 {
     width: 230px;
     height: 220px;
-    top: 45%;
-    right: -3%;
+    top: 50%;
+    right: 5%;
 }
 
 .s1-img--4 img {
@@ -134,8 +134,8 @@
 .s1-img--5 {
     width: 250px;
     height: 230px;
-    bottom: 2%;
-    left: 15%;
+    bottom: 8%;
+    left: 20%;
 }
 
 .s1-img--5 img {
@@ -149,8 +149,8 @@
 .s1-img--6 {
     width: 220px;
     height: 200px;
-    bottom: -3%;
-    right: 12%;
+    bottom: 5%;
+    right: 18%;
 }
 
 .s1-img--6 img {
@@ -359,7 +359,7 @@
    ═══════════════════════════════════════════════ */
 @media (max-width: 768px) {
     .s1-wrapper {
-        height: 250vh;
+        height: 350vh;
     }
 
     .s1-text {
