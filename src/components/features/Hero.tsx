@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
-import heroImg from '../../assets/images/hero-img.svg';
+import heroImg from '../../assets/images/hero-img.webp';
 import faceImg from '../../assets/images/face-1.png';
-import heistOverlay from '../../assets/images/heist-overlay.svg';
+import heistOverlay from '../../assets/images/heist-overlay.webp';
 import { HyperText } from '../ui/HyperText';
 import './Hero.css';
 
@@ -100,7 +100,7 @@ export default function Hero({ loading = false }: HeroProps) {
             <div className="hero__figure-wrap" style={parallax(-5)}>
                 <div className="hero__figure-glow" />
                 <div className="hero__figure">
-                    <img src={heroImg} alt="Money Heist Hero" className="hero__figure-img" />
+                    <img src={heroImg} alt="Money Heist Hero" className="hero__figure-img" loading="eager" fetchPriority="high" decoding="sync" />
                 </div>
             </div>
 

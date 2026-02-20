@@ -313,10 +313,9 @@
     clip-path: polygon(100% 0, 0 0, 100% 100%);
 }
 
-/* Bottom Code Label */
 .team-card-code {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     background: var(--color-primary, #E50914);
     padding: 0.25rem 0.5rem;
