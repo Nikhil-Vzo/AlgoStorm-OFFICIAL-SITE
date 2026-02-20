@@ -28,7 +28,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 180px;
+    height: 80px;
+    /* Shortened to pull the next section tighter */
     background: linear-gradient(to bottom, transparent, var(--color-background, #050505));
     z-index: 2;
     pointer-events: none;

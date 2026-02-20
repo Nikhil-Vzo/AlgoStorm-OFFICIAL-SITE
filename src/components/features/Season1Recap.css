@@ -7,6 +7,9 @@
 .s1-wrapper {
     position: relative;
     height: 380vh;
+    margin-top: -10vh;
+    /* Pulled up to eliminate dead space after Hero */
+    padding: 0;
     background: var(--color-background);
 }
 
@@ -36,12 +39,29 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     background-color: var(--color-background);
-    border: 6px solid #e0e0e0;
-    border-bottom-width: 24px;
-    /* Polaroid/dossier feel */
-    border-radius: 2px;
+
+    /* User-requested inner-curve mask */
+    --r: 20px;
+    --s: 40px;
+    --a: 20deg;
+    --p: 50%;
+    border-radius: var(--r);
+    --_m: var(--r), #000 calc(100% - 1px), #0000;
+    --_d: (var(--s) + var(--r))*cos(var(--a));
+    mask:
+        radial-gradient(var(--r) at calc(var(--p) + var(--_d)) var(--_m)),
+        radial-gradient(var(--r) at calc(var(--p) - var(--_d)) var(--_m)),
+        radial-gradient(var(--s) at var(--p) calc(-1*sin(var(--a))*var(--s)),
+            #0000 100%, #000 calc(100% + 1px)) 0 calc(var(--r)*(1 - sin(var(--a)))) no-repeat,
+        linear-gradient(90deg, #000 calc(var(--p) - var(--_d)), #0000 0 calc(var(--p) + var(--_d)), #000 0);
+    -webkit-mask:
+        radial-gradient(var(--r) at calc(var(--p) + var(--_d)) var(--_m)),
+        radial-gradient(var(--r) at calc(var(--p) - var(--_d)) var(--_m)),
+        radial-gradient(var(--s) at var(--p) calc(-1*sin(var(--a))*var(--s)),
+            #0000 100%, #000 calc(100% + 1px)) 0 calc(var(--r)*(1 - sin(var(--a)))) no-repeat,
+        linear-gradient(90deg, #000 calc(var(--p) - var(--_d)), #0000 0 calc(var(--p) + var(--_d)), #000 0);
+
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
 
     /* Money Heist intense cinematic filter */
@@ -53,119 +73,99 @@
     transform: scale(1.05);
 }
 
-/* Semi-transparent "Tape" holding the photos */
-.s1-img::after {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-5deg);
-    width: 60px;
-    height: 25px;
-    background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(2px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    z-index: 10;
+/* Positions & Scattered Dossier Rotations */
+/* Base styles for the large paired scrolling photos */
+.s1-img {
+    width: 32vw;
+    height: 45vh;
+    min-width: 260px;
+    max-width: 420px;
+    /* Center them vertically in CSS, GSAP handles the huge vertical scroll offsets */
+    top: 50%;
+    margin-top: -22.5vh;
 }
 
-/* Positions & Scattered Dossier Rotations */
+/* ── Pair 1 ── */
 .s1-img--1 {
-    width: 260px;
-    height: 220px;
-    top: 5%;
-    left: 8%;
+    left: 4%;
 }
 
 .s1-img--1 img {
-    transform: rotate(6deg);
+    transform: rotate(4deg);
 }
 
 .s1-img--1::after {
     transform: translateX(-50%) rotate(1deg);
 }
 
-/* Tape: base -5deg + 6deg = 1deg */
-
 .s1-img--2 {
-    width: 240px;
-    height: 200px;
-    top: 12%;
-    right: 6%;
+    right: 4%;
 }
 
 .s1-img--2 img {
-    transform: rotate(-8deg);
-}
-
-.s1-img--2::after {
-    transform: translateX(-50%) rotate(-13deg);
-}
-
-.s1-img--3 {
-    width: 250px;
-    height: 260px;
-    top: 45%;
-    left: 5%;
-}
-
-.s1-img--3 img {
     transform: rotate(-5deg);
 }
 
-.s1-img--3::after {
-    transform: translateX(-50%) rotate(-10deg);
-}
-
-.s1-img--4 {
-    width: 230px;
-    height: 220px;
-    top: 50%;
-    right: 5%;
-}
-
-.s1-img--4 img {
-    transform: rotate(10deg);
-}
-
-.s1-img--4::after {
-    transform: translateX(-50%) rotate(5deg);
-}
-
-.s1-img--5 {
-    width: 250px;
-    height: 230px;
-    bottom: 8%;
-    left: 20%;
-}
-
-.s1-img--5 img {
-    transform: rotate(4deg);
-}
-
-.s1-img--5::after {
+.s1-img--2::after {
     transform: translateX(-50%) rotate(-1deg);
 }
 
-.s1-img--6 {
-    width: 220px;
-    height: 200px;
-    bottom: 5%;
-    right: 18%;
+/* ── Pair 2 ── */
+.s1-img--3 {
+    left: 8%;
 }
 
-.s1-img--6 img {
+.s1-img--3 img {
     transform: rotate(-6deg);
 }
 
-.s1-img--6::after {
+.s1-img--3::after {
     transform: translateX(-50%) rotate(-11deg);
+}
+
+.s1-img--4 {
+    right: 8%;
+}
+
+.s1-img--4 img {
+    transform: rotate(7deg);
+}
+
+.s1-img--4::after {
+    transform: translateX(-50%) rotate(2deg);
+}
+
+/* ── Pair 3 ── */
+.s1-img--5 {
+    left: 2%;
+}
+
+.s1-img--5 img {
+    transform: rotate(3deg);
+}
+
+.s1-img--5::after {
+    transform: translateX(-50%) rotate(-2deg);
+}
+
+.s1-img--6 {
+    right: 2%;
+}
+
+.s1-img--6 img {
+    transform: rotate(-4deg);
+}
+
+.s1-img--6::after {
+    transform: translateX(-50%) rotate(1deg);
 }
 
 /* Wrapper handles absolute positioning and GSAP animations */
 .s1-text-wrap {
     position: absolute;
     inset: 0;
-    z-index: 8;
+    z-index: 2;
+    /* Lower than .s1-img (z-index 4) so images pass OVER the text */
     pointer-events: none;
     will-change: transform, opacity;
 }
@@ -368,38 +368,41 @@
     }
 
     .s1-img {
-        width: 135px !important;
-        height: 95px !important;
+        width: 40vw !important;
+        height: 25vh !important;
+        min-width: 140px;
     }
 
+    /* Remove the complex curved mask on phones and use a clean rounded rectangle */
+    .s1-img img {
+        mask: none;
+        -webkit-mask: none;
+        border-radius: 8px;
+    }
+
+    /* Keep pairs strictly forced to left and right edges to prevent stacking */
     .s1-img--1 {
-        top: 4%;
         left: 2%;
     }
 
     .s1-img--2 {
-        top: 6%;
         right: 2%;
     }
 
     .s1-img--3 {
-        top: 50%;
-        left: 2%;
+        left: 5%;
     }
 
     .s1-img--4 {
-        top: 38%;
-        right: 2%;
+        right: 5%;
     }
 
     .s1-img--5 {
-        bottom: 14%;
-        left: 30%;
+        left: 0%;
     }
 
     .s1-img--6 {
-        bottom: 4%;
-        right: 3%;
+        right: 0%;
     }
 
     .s1-h--sub {

@@ -44,28 +44,28 @@ export default function Season1Recap() {
             },
         });
 
-        // ── Phase 1 (0→0.05): Main Typography appears completely first ──
-        tl.to(textWrap, { opacity: 1, yPercent: 0, duration: 0.05, ease: 'power2.out' }, 0);
-        tl.fromTo(glow, { opacity: 0 }, { opacity: 1, duration: 0.05, ease: 'power2.inOut' }, 0);
+        // ── Phase 1 (0→0.10): Main Typography appears completely first ──
+        tl.to(textWrap, { opacity: 1, yPercent: 0, duration: 0.10, ease: 'power2.out' }, 0);
+        tl.fromTo(glow, { opacity: 0 }, { opacity: 1, duration: 0.10, ease: 'power2.inOut' }, 0);
 
-        // ── Phase 2 (0.05→0.20): Images slide in aggressively behind the text ONLY AFTER text is visible ──
-        tl.from(imgs[0], { xPercent: -200, duration: 0.08, ease: 'power3.out' }, 0.05);
-        tl.from(imgs[1], { xPercent: 200, duration: 0.08, ease: 'power3.out' }, 0.08);
-        tl.from(imgs[2], { xPercent: -180, yPercent: 80, duration: 0.08, ease: 'power3.out' }, 0.11);
-        tl.from(imgs[3], { xPercent: 200, duration: 0.08, ease: 'power3.out' }, 0.14);
-        tl.from(imgs[4], { yPercent: 200, duration: 0.08, ease: 'power3.out' }, 0.17);
-        tl.from(imgs[5], { xPercent: 180, yPercent: 120, duration: 0.08, ease: 'power3.out' }, 0.20);
+        // ── Phase 1b (0.15→0.20): Description appears ──
+        tl.fromTo(desc, { opacity: 0, yPercent: 30 }, { opacity: 1, yPercent: 0, duration: 0.05, ease: 'power2.out' }, 0.15);
 
-        // ── Phase 3 (0.24→0.28): Description appears ──
-        tl.fromTo(desc, { opacity: 0, yPercent: 30 }, { opacity: 1, yPercent: 0, duration: 0.06, ease: 'power2.out' }, 0.24);
+        // Set all images far below the screen initially
+        const startY = window.innerHeight * 1.5;
+        const endY = -window.innerHeight * 1.5;
 
-        // ── Phase 4 (0.28→1.0): Continuous gentle parallax drift for the entire remaining scroll ──
-        tl.to(imgs[0], { xPercent: -20, yPercent: -15, duration: 0.72, ease: 'none' }, 0.28);
-        tl.to(imgs[1], { xPercent: 20, yPercent: -12, duration: 0.72, ease: 'none' }, 0.28);
-        tl.to(imgs[2], { xPercent: -25, yPercent: 12, duration: 0.72, ease: 'none' }, 0.28);
-        tl.to(imgs[3], { xPercent: 25, yPercent: 15, duration: 0.72, ease: 'none' }, 0.28);
-        tl.to(imgs[4], { xPercent: -15, yPercent: 25, duration: 0.72, ease: 'none' }, 0.28);
-        tl.to(imgs[5], { xPercent: 20, yPercent: 20, duration: 0.72, ease: 'none' }, 0.28);
+        // ── Phase 2: Pair 1 flows from bottom to top ──
+        tl.fromTo(imgs[0], { y: startY }, { y: endY, duration: 0.50, ease: 'none' }, 0.10);
+        tl.fromTo(imgs[1], { y: startY * 1.05 }, { y: endY, duration: 0.50, ease: 'none' }, 0.12);
+
+        // ── Phase 3: Pair 2 flows from bottom to top (Tighter overlap) ──
+        tl.fromTo(imgs[2], { y: startY }, { y: endY, duration: 0.50, ease: 'none' }, 0.22);
+        tl.fromTo(imgs[3], { y: startY * 1.05 }, { y: endY, duration: 0.50, ease: 'none' }, 0.24);
+
+        // ── Phase 4: Pair 3 flows from bottom to top (Tighter overlap) ──
+        tl.fromTo(imgs[4], { y: startY }, { y: endY, duration: 0.50, ease: 'none' }, 0.34);
+        tl.fromTo(imgs[5], { y: startY * 1.05 }, { y: endY, duration: 0.50, ease: 'none' }, 0.36);
 
         return () => {
             tl.kill();
