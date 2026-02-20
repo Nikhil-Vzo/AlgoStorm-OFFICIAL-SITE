@@ -6,7 +6,7 @@
 /* Tall wrapper — its height is what drives the scroll progress */
 .s1-wrapper {
     position: relative;
-    height: 400vh;
+    height: 300vh;
     background: var(--color-background);
 }
 
@@ -359,7 +359,7 @@
    ═══════════════════════════════════════════════ */
 @media (max-width: 768px) {
     .s1-wrapper {
-        height: 350vh;
+        height: 250vh;
     }
 
     .s1-text {
