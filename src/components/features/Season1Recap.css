@@ -74,15 +74,31 @@
     height: 220px;
     top: -2%;
     left: -2%;
-    transform: rotate(6deg) !important;
 }
+
+.s1-img--1 img {
+    transform: rotate(6deg);
+}
+
+.s1-img--1::after {
+    transform: translateX(-50%) rotate(1deg);
+}
+
+/* Tape: base -5deg + 6deg = 1deg */
 
 .s1-img--2 {
     width: 240px;
     height: 200px;
     top: 5%;
     right: -4%;
-    transform: rotate(-8deg) !important;
+}
+
+.s1-img--2 img {
+    transform: rotate(-8deg);
+}
+
+.s1-img--2::after {
+    transform: translateX(-50%) rotate(-13deg);
 }
 
 .s1-img--3 {
@@ -90,7 +106,14 @@
     height: 260px;
     top: 40%;
     left: -5%;
-    transform: rotate(-5deg) !important;
+}
+
+.s1-img--3 img {
+    transform: rotate(-5deg);
+}
+
+.s1-img--3::after {
+    transform: translateX(-50%) rotate(-10deg);
 }
 
 .s1-img--4 {
@@ -98,7 +121,14 @@
     height: 220px;
     top: 45%;
     right: -3%;
-    transform: rotate(10deg) !important;
+}
+
+.s1-img--4 img {
+    transform: rotate(10deg);
+}
+
+.s1-img--4::after {
+    transform: translateX(-50%) rotate(5deg);
 }
 
 .s1-img--5 {
@@ -106,7 +136,14 @@
     height: 230px;
     bottom: 2%;
     left: 15%;
-    transform: rotate(4deg) !important;
+}
+
+.s1-img--5 img {
+    transform: rotate(4deg);
+}
+
+.s1-img--5::after {
+    transform: translateX(-50%) rotate(-1deg);
 }
 
 .s1-img--6 {
@@ -114,7 +151,14 @@
     height: 200px;
     bottom: -3%;
     right: 12%;
-    transform: rotate(-6deg) !important;
+}
+
+.s1-img--6 img {
+    transform: rotate(-6deg);
+}
+
+.s1-img--6::after {
+    transform: translateX(-50%) rotate(-11deg);
 }
 
 /* Wrapper handles absolute positioning and GSAP animations */

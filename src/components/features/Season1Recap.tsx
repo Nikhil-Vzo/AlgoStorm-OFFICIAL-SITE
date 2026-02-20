@@ -67,11 +67,17 @@ export default function Season1Recap() {
         tl.to(imgs[4], { xPercent: -8, yPercent: 16, duration: 0.22, ease: 'none' }, 0.50);
         tl.to(imgs[5], { xPercent: 14, yPercent: 14, duration: 0.22, ease: 'none' }, 0.50);
 
-        // ── Phase 5 (0.75→1.0): Everything fades out smoothly ──
-        tl.to(imgs, { opacity: 0, scale: 0.92, duration: 0.18, ease: 'power2.inOut', stagger: 0.01 }, 0.75);
-        tl.to(textWrap, { opacity: 0, yPercent: -15, duration: 0.12, ease: 'power2.in' }, 0.80);
-        tl.to(desc, { opacity: 0, yPercent: -10, duration: 0.10, ease: 'power2.in' }, 0.82);
-        tl.to(glow, { opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.84);
+        // ── Phase 5 (0.75→1.0): Everything flies out or fades smoothly ──
+        tl.to(imgs[0], { xPercent: -200, duration: 0.18, ease: 'power2.in' }, 0.75);
+        tl.to(imgs[1], { xPercent: 200, duration: 0.18, ease: 'power2.in' }, 0.76);
+        tl.to(imgs[2], { xPercent: -180, yPercent: 80, duration: 0.18, ease: 'power2.in' }, 0.77);
+        tl.to(imgs[3], { xPercent: 200, duration: 0.18, ease: 'power2.in' }, 0.78);
+        tl.to(imgs[4], { yPercent: 200, duration: 0.18, ease: 'power2.in' }, 0.79);
+        tl.to(imgs[5], { xPercent: 180, yPercent: 120, duration: 0.18, ease: 'power2.in' }, 0.80);
+
+        tl.to(textWrap, { opacity: 0, yPercent: -15, duration: 0.12, ease: 'power2.in' }, 0.85);
+        tl.to(desc, { opacity: 0, yPercent: -10, duration: 0.10, ease: 'power2.in' }, 0.87);
+        tl.to(glow, { opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.88);
 
         return () => {
             tl.kill();
