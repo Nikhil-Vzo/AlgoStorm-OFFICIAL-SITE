@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+/* eslint-disable react-hooks/static-components */
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { AnimatePresence, motion, type MotionProps } from 'motion/react';
 
 type CharacterSet = string[] | readonly string[];
@@ -39,9 +40,9 @@ export function HyperText({
     characterSet = DEFAULT_CHARACTER_SET,
     ...props
 }: HyperTextProps) {
-    const MotionComponent = motion.create(Component, {
+    const MotionComponent = useMemo(() => motion.create(Component, {
         forwardMotionProps: true,
-    });
+    }), [Component]);
 
     const [displayText, setDisplayText] = useState<string[]>(() =>
         children.split('')

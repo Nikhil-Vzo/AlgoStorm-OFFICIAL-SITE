@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 
 const navLinks = [
-  { label: 'About', href: '#about' },
-  { label: 'Tracks', href: '#tracks' },
-  { label: 'Timeline', href: '#timeline' },
-  { label: 'Sponsors', href: '#sponsors' },
-  { label: 'Team', href: '#team' },
+  { label: 'Home', href: '/', isRoute: true },
+  { label: 'Tracks', href: '/#tracks' },
+  { label: 'Timeline', href: '/#timeline' },
+  { label: 'Team', href: '/teams', isRoute: true },
 ];
 
 export default function Navbar() {
@@ -30,19 +30,25 @@ export default function Navbar() {
     >
       <div className="navbar__inner">
         {/* Logo */}
-        <a href="#" className="navbar__logo">
+        <Link to="/" className="navbar__logo">
           <div className="navbar__logo-text glitch-text" data-text="ALGOSTORM 2.0">
             ALGO<span className="navbar__logo-accent">STORM</span>
             <span className="navbar__logo-version">2.0</span>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Links */}
         <div className="navbar__links">
           {navLinks.map((link) => (
-            <a key={link.label} href={link.href} className="nav-btn">
-              <span className="nav-btn__inner">{link.label}</span>
-            </a>
+            link.isRoute ? (
+              <Link key={link.label} to={link.href} className="nav-btn">
+                <span className="nav-btn__inner">{link.label}</span>
+              </Link>
+            ) : (
+              <a key={link.label} href={link.href} className="nav-btn">
+                <span className="nav-btn__inner">{link.label}</span>
+              </a>
+            )
           ))}
         </div>
 
@@ -72,14 +78,25 @@ export default function Navbar() {
             transition={{ duration: 0.3 }}
           >
             {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="nav-btn nav-btn--mobile"
-                onClick={() => setMobileOpen(false)}
-              >
-                <span className="nav-btn__inner">{link.label}</span>
-              </a>
+              link.isRoute ? (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="nav-btn nav-btn--mobile"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <span className="nav-btn__inner">{link.label}</span>
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="nav-btn nav-btn--mobile"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <span className="nav-btn__inner">{link.label}</span>
+                </a>
+              )
             ))}
             <a href="#register" className="nav-btn nav-btn--cta nav-btn--mobile-cta" onClick={() => setMobileOpen(false)}>
               <span className="nav-btn__inner nav-btn__inner--cta">Join the Heist</span>

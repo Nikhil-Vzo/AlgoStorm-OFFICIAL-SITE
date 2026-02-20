@@ -1,15 +1,28 @@
 import { useEffect, useState } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import Navbar from './components/layout/Navbar';
 import Hero from './components/features/Hero';
 import Season1Recap from './components/features/Season1Recap';
-import Team from './components/features/Team';
+import TeamsPage from './pages/TeamsPage';
 import Footer from './components/layout/Footer';
 import Loader from './components/ui/Loader';
 
 gsap.registerPlugin(ScrollTrigger);
+
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+
+  return null;
+}
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -41,12 +54,19 @@ function App() {
 
   return (
     <>
+      <ScrollToTop />
       <Loader hidden={!loading} />
       <Navbar />
       <main>
-        <Hero loading={loading} />
-        <Season1Recap />
-        <Team />
+        <Routes>
+          <Route path="/" element={
+            <>
+              <Hero loading={loading} />
+              <Season1Recap />
+            </>
+          } />
+          <Route path="/teams" element={<TeamsPage />} />
+        </Routes>
       </main>
       <Footer />
     </>

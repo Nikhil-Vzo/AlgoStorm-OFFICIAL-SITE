@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
-import teamCategories, { type TeamMember } from '../../data/teamData';
-import './Team.css';
+import teamCategories, { type TeamMember } from '../data/teamData';
+import './TeamsPage.css';
 
 /* ═══════════════════════════════════════════
    CONFIG
@@ -12,6 +12,7 @@ const DRAG_SENSITIVITY = 1.2;
 const MOMENTUM_DECAY = 0.94;
 
 function getCardW() {
+    if (typeof window === 'undefined') return 210;
     if (window.innerWidth <= 480) return 115;
     if (window.innerWidth <= 768) return 155;
     return 210;
@@ -67,8 +68,13 @@ function Card({ member }: { member: FlatMember }) {
 /* ═══════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════ */
-export default function Team() {
-    const allMembers = useMemo(buildFlat, []);
+export default function TeamsPage() {
+    // Scroll to top on mount
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    const allMembers = useMemo(() => buildFlat(), []);
     const N = allMembers.length;
 
     const [activeCatId, setActiveCatId] = useState(teamCategories[0].id);

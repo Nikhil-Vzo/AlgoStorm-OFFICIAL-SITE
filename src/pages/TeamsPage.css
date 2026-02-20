@@ -1,5 +1,5 @@
 /* ============================================
-   TEAM SECTION — La Casa De Papel Theme
+   TEAM SECTION — La Casa De Papel Theme (FullScreen version)
    ============================================ */
 
 .team-section {
@@ -12,11 +12,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 4rem 1rem 3rem;
+    padding: 6rem 1rem 3rem;
     background-color: var(--color-background, #050505);
 }
 
-/* Smooth top fade from hero */
+/* Smooth top fade from hero - not needed if it's a dedicated page but kept for aesthetics */
 .team-section::before {
     content: '';
     position: absolute;
