@@ -360,6 +360,8 @@
 @media (max-width: 768px) {
     .s1-wrapper {
         height: 350vh;
+        margin-top: -20vh;
+        /* Strongly pull up on phones to fix scroll gap */
     }
 
     .s1-text {
