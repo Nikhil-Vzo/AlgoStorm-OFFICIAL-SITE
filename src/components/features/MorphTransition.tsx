@@ -53,7 +53,11 @@ export default function MorphTransition({ children }: MorphTransitionProps) {
 
             // Phase 3: 50% to 100% scrub (user scrolls next 100vh)
             // SVG continues scrolling UP while zooming out intensely and tilting forward into the screen
-            tl.to(svg, { y: '-120vh', scale: 1.8, rotationX: 45, duration: 0.55, ease: 'power2.inOut', force3D: true }, 0.45);
+            const isMobile = window.innerWidth < 768;
+            const endScale = isMobile ? 1.3 : 1.8;
+            const endRotationX = isMobile ? 15 : 45;
+
+            tl.to(svg, { y: '-120vh', scale: endScale, rotationX: endRotationX, duration: 0.55, ease: 'power2.inOut', force3D: true }, 0.45);
 
         }, containerRef);
 
