@@ -45,7 +45,7 @@
     will-change: transform, opacity;
     /* TranslateZ to force hardware acceleration on mobile reducing scroll lag */
     transform: translateZ(0);
-    filter: drop-shadow(0 -20px 40px rgba(0, 0, 0, 0.5));
+    /* Removed drop-shadow to optimize performance and prevent scroll lag during 3D transform */
 
     /* Custom jagged torn edge on top and bottom so it doesn't look like a flat box */
     clip-path: polygon(0% 2%, 4% 0%, 8% 3%, 12% 1%, 17% 4%, 22% 0%, 26% 2%, 30% 0%, 35% 3%, 40% 1%,

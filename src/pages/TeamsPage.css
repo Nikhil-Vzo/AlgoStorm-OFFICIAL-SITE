@@ -142,6 +142,7 @@
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.5);
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform: translate(-50%, -50%);
+    will-change: transform, box-shadow;
 }
 
 @media (hover: hover) {
@@ -248,17 +249,16 @@
     font-weight: 800;
     color: rgba(255, 255, 255, 0.05);
     /* faint fill for better visibility */
-    -webkit-text-stroke: 3px rgba(255, 255, 255, 0.5);
-    /* thicker, brighter stroke */
+    -webkit-text-stroke: 3px rgba(255, 0, 60, 0.8);
+    /* thicker, brighter red stroke */
     text-transform: uppercase;
     white-space: nowrap;
-    transform: translate(-50%, -50%);
+    text-align: center;
     pointer-events: none;
     letter-spacing: -0.2vw;
     mix-blend-mode: normal;
-    /* removed overlay so it is always visible */
-    text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
-    /* slight ambient glow */
+    text-shadow: 0 0 60px rgba(255, 0, 60, 0.4), 0 0 120px rgba(255, 0, 60, 0.2);
+    /* intense ambient red glow */
 }
 
 /* --- PARTICLES --- */

@@ -57,7 +57,7 @@ export default function TeamsPage() {
                 type: 'category',
                 name: cat.name,
                 baseZ: currentZ,
-                rot: (Math.random() - 0.5) * 10
+                rot: 0 // Keep text perfectly horizontal
             });
             currentZ -= CONFIG.zGapCategory;
 
@@ -110,7 +110,7 @@ export default function TeamsPage() {
         if (!worldRef.current || !viewportRef.current) return;
 
         const lenis = new Lenis({
-            lerp: 0.08,
+            lerp: 0.05, // Lowered from 0.08 for even smoother scrolling
         });
 
         lenis.on('scroll', ({ scroll, velocity: v }: any) => {
@@ -135,8 +135,8 @@ export default function TeamsPage() {
             st.lastTime = time;
             if (Math.round(time) % 10 < 1 && delta > 0) setFps(Math.round(1000 / delta));
 
-            // Smooth velocity
-            st.velocity += (st.targetSpeed - st.velocity) * 0.1;
+            // Smooth velocity - reduced multiplier for smoother camera reaction
+            st.velocity += (st.targetSpeed - st.velocity) * 0.05;
 
             // HUD feedback updates
             if (Math.round(time) % 5 === 0) {
