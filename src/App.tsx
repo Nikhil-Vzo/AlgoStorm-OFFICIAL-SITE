@@ -28,6 +28,8 @@ function ScrollToTop() {
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const isTeamsPage = location.pathname === '/teams';
 
   useEffect(() => {
     const lenis = new Lenis();
@@ -73,7 +75,7 @@ function App() {
           <Route path="/teams" element={<TeamsPage />} />
         </Routes>
       </main>
-      <Footer />
+      {!isTeamsPage && <Footer />}
     </>
   );
 }

@@ -61,21 +61,23 @@ export default function MorphTransition({ children }: MorphTransitionProps) {
     }, []);
 
     return (
-        <div
-            ref={containerRef}
-            className="morph-transition-container"
-        >
-            <div className="morph-content-wrapper" ref={contentRef}>
-                {children}
-            </div>
+        <div className="morph-transition-react-wrapper">
+            <div
+                ref={containerRef}
+                className="morph-transition-container"
+            >
+                <div className="morph-content-wrapper" ref={contentRef}>
+                    {children}
+                </div>
 
-            <div className="morph-svg-wrapper">
-                <img
-                    ref={svgRef}
-                    src={moneyRedSvg}
-                    alt="Transition Reveal"
-                    className="morph-svg-image"
-                />
+                <div className="morph-svg-wrapper">
+                    <img
+                        ref={svgRef}
+                        src={moneyRedSvg}
+                        alt="Transition Reveal"
+                        className="morph-svg-image"
+                    />
+                </div>
             </div>
         </div>
     );

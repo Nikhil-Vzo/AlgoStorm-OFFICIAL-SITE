@@ -1,599 +1,311 @@
-/* ============================================
-   TEAM SECTION — La Casa De Papel Theme (FullScreen version)
-   ============================================ */
+/* ═══════════════════════════════════════════════
+   TEAMS PAGE — BRUTALIST HYPER SCROLL
+   ═══════════════════════════════════════════════ */
 
 .team-section {
-    min-height: 100vh;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 6rem 1rem 3rem;
-    background-color: var(--color-background, #050505);
-}
-
-/* Smooth top fade from hero - not needed if it's a dedicated page but kept for aesthetics */
-.team-section::before {
-    content: '';
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    height: 120px;
-    background: linear-gradient(to bottom, var(--color-background, #050505), transparent);
-    z-index: 5;
-    pointer-events: none;
+    width: 100vw;
+    height: 100vh;
+    background: #030303;
+    color: #e0e0e0;
+    overflow: hidden;
+    cursor: crosshair;
+    z-index: 10;
 }
 
-/* Background Pattern */
-.team-bg-pattern {
+/* --- POST PROCESSING & OVERLAYS --- */
+.team-scanlines {
     position: absolute;
     inset: 0;
-    opacity: 0.04;
-    background-image: repeating-linear-gradient(45deg,
-            transparent,
-            transparent 10px,
-            var(--color-primary, #E50914) 10px,
-            var(--color-primary, #E50914) 12px);
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 0) 50%,
+            rgba(0, 0, 0, 0.2) 50%,
+            rgba(0, 0, 0, 0.2));
+    background-size: 100% 4px;
     pointer-events: none;
-}
-
-/* Red Accent Glow */
-.team-red-glow {
-    position: absolute;
-    top: 33%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1000px;
-    height: 600px;
-    background: rgba(229, 9, 20, 0.08);
-    border-radius: 50%;
-    filter: blur(150px);
-    pointer-events: none;
-}
-
-/* Content Container */
-.team-content {
-    position: relative;
     z-index: 10;
+}
+
+.team-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 40%, #000 120%);
+    z-index: 11;
+    pointer-events: none;
+}
+
+.team-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    opacity: 0.07;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* --- HUD --- */
+.team-hud {
+    position: absolute;
+    inset: 2rem;
+    z-index: 20;
+    pointer-events: none;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 1400px;
-}
-
-/* ============================================
-   HEADER
-   ============================================ */
-
-.team-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.team-title {
-    font-family: var(--font-display, 'Outfit', sans-serif);
-    font-size: clamp(3rem, 8vw, 5rem);
-    font-weight: 900;
-    margin-bottom: 1rem;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    color: var(--color-text, #fff);
-}
-
-.team-title-red {
-    color: var(--color-primary, #E50914);
-}
-
-.team-subtitle {
-    color: var(--color-text-muted, #9CA3AF);
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    letter-spacing: 0.2em;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
 }
 
-/* ============================================
-   ACTIVE TEAM NAME
-   ============================================ */
-
-.team-active-label {
-    text-align: center;
-    margin-bottom: 1rem;
-    min-height: 3.5rem;
+.team-hud-top,
+.team-hud-bottom {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
 }
 
-.team-active-name {
-    font-family: var(--font-display, 'Outfit', sans-serif);
-    font-size: clamp(1.8rem, 5vw, 3rem);
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-primary, #E50914);
-    text-shadow:
-        0 0 20px rgba(229, 9, 20, 0.4),
-        0 0 60px rgba(229, 9, 20, 0.15);
-    animation: teamLabelIn 0.4s ease both;
+.team-hud strong {
+    color: #00f3ff;
 }
 
-@keyframes teamLabelIn {
-    from {
-        opacity: 0;
-        transform: translateY(12px) scale(0.95);
-        filter: blur(4px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-    }
-}
-
-/* ============================================
-   DOT NAVIGATION
-   ============================================ */
-
-.team-dots {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
-}
-
-.team-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-    transition: all 0.3s ease;
+.team-hud-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 1rem;
     position: relative;
 }
 
-.team-dot:hover {
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: scale(1.3);
-}
-
-.team-dot--active {
-    background: var(--color-primary, #E50914);
-    border-color: var(--color-primary, #E50914);
-    box-shadow:
-        0 0 8px rgba(229, 9, 20, 0.6),
-        0 0 20px rgba(229, 9, 20, 0.3);
-    transform: scale(1.4);
-}
-
-.team-dot--active:hover {
-    transform: scale(1.5);
-}
-
-/* ============================================
-   CAROUSEL CONTAINER
-   ============================================ */
-
-.team-carousel {
-    position: relative;
-    width: 100%;
-    max-width: 1200px;
-    height: 450px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    perspective: 1200px;
-    overflow: visible;
-}
-
-.team-cards-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    touch-action: pan-y;
-    cursor: grab;
-}
-
-.team-cards-wrap:active {
-    cursor: grabbing;
-}
-
-/* ============================================
-   TEAM CARD
-   ============================================ */
-
-.team-card {
+.team-hud-line::after {
+    content: '';
     position: absolute;
-    width: 220px;
-    height: 300px;
-    cursor: pointer;
-    transform-origin: center center;
+    right: 0;
+    top: -2px;
+    width: 5px;
+    height: 5px;
+    background: #ff003c;
+}
+
+.team-center-nav {
+    align-self: flex-start;
+    margin-top: auto;
+    margin-bottom: auto;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+}
+
+/* --- 3D SCENE --- */
+.team-viewport {
+    position: absolute;
+    inset: 0;
+    perspective: 1000px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.team-world {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-style: preserve-3d;
     will-change: transform;
 }
 
-.team-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    border: 4px solid #ffffff;
-    background: #000000;
-    box-shadow: 6px 6px 0px 0px rgba(255, 255, 255, 0.8);
-    transition: all 0.3s ease;
-}
-
-.team-card:hover .team-card-inner {
-    border-color: var(--color-primary, #E50914);
-    box-shadow: 12px 12px 0px 0px rgba(229, 9, 20, 1);
-}
-
-.team-card-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.team-card:hover .team-card-image {
-    transform: scale(1.1);
-}
-
-/* Placeholder for missing images */
-.team-card-placeholder {
-    width: 100%;
-    height: 100%;
+.team-item {
+    position: absolute;
+    left: 0;
+    top: 0;
+    backface-visibility: hidden;
+    transform-origin: center center;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-    font-size: 3rem;
-    font-weight: 900;
-    color: rgba(229, 9, 20, 0.3);
-    font-family: var(--font-display, 'Outfit', sans-serif);
 }
 
-/* Card Bottom Info — always visible */
-.team-card-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
-    padding: 2.5rem 0.75rem 0.75rem;
-    pointer-events: none;
-}
-
-.team-card-name {
-    color: #ffffff;
-    font-size: clamp(0.875rem, 2vw, 1.125rem);
-    font-weight: 900;
-    text-transform: uppercase;
-    line-height: 1.2;
-    margin-bottom: 0.25rem;
-}
-
-.team-card-team {
-    color: var(--color-primary, #E50914);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 0.25rem;
-}
-
-.team-card-role {
-    color: var(--color-text-muted, #9ca3af);
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-/* Corner Accent */
-.team-card-corner {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 40px;
-    height: 40px;
-    background: var(--color-primary, #E50914);
-    clip-path: polygon(100% 0, 0 0, 100% 100%);
-}
-
-.team-card-code {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: var(--color-primary, #E50914);
-    padding: 0.25rem 0.5rem;
-}
-
-.team-card-code span {
-    color: #ffffff;
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-}
-
-/* Drag Hint */
-.team-drag-hint {
-    position: absolute;
-    bottom: -2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--color-text-dim, #6b7280);
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: none;
-    align-items: center;
-    gap: 0.75rem;
-    opacity: 0;
-    animation: teamFadeIn 0.6s ease 1.5s forwards;
-}
-
-@keyframes teamFadeIn {
-    to {
-        opacity: 1;
-    }
-}
-
-.team-drag-hint svg {
-    width: 1rem;
-    height: 1rem;
-}
-
-.team-arrow-left {
-    animation: teamBounceLeft 1.5s ease infinite;
-}
-
-.team-arrow-right {
-    animation: teamBounceRight 1.5s ease infinite;
-}
-
-@keyframes teamBounceLeft {
-
-    0%,
-    100% {
-        transform: translateX(0);
-    }
-
-    50% {
-        transform: translateX(-5px);
-    }
-}
-
-@keyframes teamBounceRight {
-
-    0%,
-    100% {
-        transform: translateX(0);
-    }
-
-    50% {
-        transform: translateX(5px);
-    }
-}
-
-/* ============================================
-   STATS SECTION
-   ============================================ */
-
-.team-stats {
-    display: flex;
-    gap: clamp(2rem, 5vw, 4rem);
-    margin-top: 4rem;
-}
-
-.team-stat-item {
-    text-align: center;
-}
-
-.team-stat-value {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 900;
-    color: var(--color-primary, #E50914);
-    line-height: 1;
-    font-family: var(--font-display, 'Outfit', sans-serif);
-}
-
-.team-stat-label {
-    color: var(--color-text-dim, #6b7280);
-    font-size: clamp(0.625rem, 1.5vw, 0.875rem);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-top: 0.5rem;
-}
-
-/* ============================================
-   DECORATIVE ELEMENTS
-   ============================================ */
-
-.team-corner {
-    position: absolute;
-    width: 3rem;
-    height: 3rem;
-    border-color: var(--color-primary, #E50914);
-    border-style: solid;
-}
-
-.team-corner--tl {
-    top: 1.5rem;
-    left: 1.5rem;
-    border-width: 4px 0 0 4px;
-}
-
-.team-corner--tr {
-    top: 1.5rem;
-    right: 1.5rem;
-    border-width: 4px 4px 0 0;
-}
-
-.team-corner--bl {
-    bottom: 1.5rem;
-    left: 1.5rem;
-    border-width: 0 0 4px 4px;
-}
-
-.team-corner--br {
-    bottom: 1.5rem;
-    right: 1.5rem;
-    border-width: 0 4px 4px 0;
-}
-
-/* Side Accents */
-.team-side-accent {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+/* --- CARDS & CONTENT --- */
+.team-3d-card {
+    width: 380px;
+    height: 520px;
+    background: rgba(10, 10, 10, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    justify-content: space-between;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translate(-50%, -50%);
 }
 
-.team-side-accent--left {
-    left: 1rem;
-}
-
-.team-side-accent--right {
-    right: 1rem;
-    align-items: flex-end;
-}
-
-.team-accent-line {
-    background: var(--color-primary, #E50914);
-}
-
-.team-accent-line--long {
-    width: 4px;
-    height: 2rem;
-}
-
-.team-accent-line--medium {
-    width: 4px;
-    height: 1rem;
-    opacity: 0.5;
-}
-
-.team-accent-line--short {
-    width: 4px;
-    height: 0.5rem;
-    opacity: 0.25;
-}
-
-/* Dragging state */
-.team-cards-wrap--dragging {
-    cursor: grabbing;
-}
-
-.team-cards-wrap--dragging .team-card {
-    transition: none;
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-
-@media (min-width: 769px) {
-    .team-drag-hint {
-        display: flex;
+@media (hover: hover) {
+    .team-3d-card:hover {
+        border-color: #ff003c;
+        box-shadow: 0 0 30px rgba(255, 0, 60, 0.2);
+        background: rgba(20, 20, 20, 0.8);
+        z-index: 100 !important;
     }
+}
+
+.team-3d-card::before,
+.team-3d-card::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.team-3d-card::before {
+    top: -1px;
+    left: -1px;
+    border-top-color: #e0e0e0;
+    border-left-color: #e0e0e0;
+}
+
+.team-3d-card::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom-color: #e0e0e0;
+    border-right-color: #e0e0e0;
+}
+
+.team-3d-card:hover::before,
+.team-3d-card:hover::after {
+    width: 100%;
+    height: 100%;
+    border-color: #ff003c;
+}
+
+.team-3d-card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.team-3d-card-id {
+    font-family: 'JetBrains Mono', monospace;
+    color: #ff003c;
+    font-size: 0.8rem;
+}
+
+.team-3d-card h2 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 2.5rem;
+    line-height: 0.9;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #fff;
+    mix-blend-mode: hard-light;
+}
+
+/* Image override for cards */
+.team-3d-card-img-wrap {
+    flex-grow: 1;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.team-3d-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(120%);
+    transition: filter 0.3s ease;
+}
+
+.team-3d-card:hover .team-3d-card-img {
+    filter: grayscale(0%) contrast(100%);
+}
+
+.team-3d-card-footer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    justify-content: space-between;
+}
+
+/* --- BIG TEXT (Category Header) --- */
+.team-big-text {
+    font-family: 'Syncopate', sans-serif;
+    font-size: clamp(8vw, 15vw, 20vw);
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.05);
+    /* faint fill for better visibility */
+    -webkit-text-stroke: 3px rgba(255, 255, 255, 0.5);
+    /* thicker, brighter stroke */
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    letter-spacing: -0.2vw;
+    mix-blend-mode: normal;
+    /* removed overlay so it is always visible */
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+    /* slight ambient glow */
+}
+
+/* --- PARTICLES --- */
+.team-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    transform: translate(-50%, -50%);
+}
+
+/* --- SCROLL PROXY --- */
+.team-scroll-proxy {
+    /* Height will be injected dynamically by React */
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+}
+
+/* --- FALLBACKS / UTILS --- */
+.team-member-name {
+    font-size: 2rem !important;
+}
+
+.team-member-role {
+    color: #00f3ff;
+    font-size: 0.85rem !important;
 }
 
 @media (max-width: 768px) {
-    .team-carousel {
-        height: 350px;
+    .team-3d-card {
+        width: 85vw;
+        height: 60vh;
+        max-height: 400px;
+        padding: 1.5rem;
     }
 
-    .team-card {
-        width: 160px;
-        height: 220px;
+    .team-3d-card h2 {
+        font-size: 2rem;
     }
 
-    .team-corner {
-        width: 2rem;
-        height: 2rem;
-    }
-
-    .team-side-accent {
-        display: none;
-    }
-
-    .team-active-name {
-        font-size: clamp(1.4rem, 4vw, 2rem);
-    }
-
-    .team-dots {
-        gap: 0.6rem;
-    }
-
-    .team-dot {
-        width: 8px;
-        height: 8px;
-    }
-}
-
-@media (max-width: 480px) {
-    .team-section {
-        padding: 2rem 0.5rem;
-    }
-
-    .team-carousel {
-        height: 300px;
-    }
-
-    .team-card {
-        width: 120px;
-        height: 165px;
-    }
-
-    .team-card-inner {
-        border-width: 3px;
-        box-shadow: 4px 4px 0px 0px rgba(255, 255, 255, 0.8);
-    }
-
-    .team-card:hover .team-card-inner {
-        box-shadow: 8px 8px 0px 0px rgba(229, 9, 20, 1);
-    }
-
-    .team-card-corner {
-        width: 24px;
-        height: 24px;
-    }
-
-    .team-card-name {
-        font-size: 0.7rem;
-    }
-
-    .team-corner {
-        width: 1.5rem;
-        height: 1.5rem;
-        border-width: 3px;
-    }
-
-    .team-active-name {
-        font-size: 1.3rem;
-    }
-
-    .team-dots {
-        gap: 0.5rem;
-    }
-
-    .team-dot {
-        width: 7px;
-        height: 7px;
+    .team-big-text {
+        font-size: clamp(15vw, 18vw, 22vw);
+        white-space: normal;
+        text-align: center;
+        width: 100vw;
+        line-height: 1;
+        -webkit-text-stroke: 2px rgba(255, 255, 255, 0.5);
     }
 }

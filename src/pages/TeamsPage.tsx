@@ -1,353 +1,334 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import gsap from 'gsap';
-import teamCategories, { type TeamMember } from '../data/teamData';
+import React, { useState, useEffect, useRef } from 'react';
+import Lenis from '@studio-freight/lenis';
+import teamCategories from '../data/teamData';
 import './TeamsPage.css';
 
 /* ═══════════════════════════════════════════
    CONFIG
    ═══════════════════════════════════════════ */
-const CARD_GAP = 28;
-const AUTO_SPEED = 0.4;           // px per frame
-const DRAG_SENSITIVITY = 1.2;
-const MOMENTUM_DECAY = 0.94;
+const CONFIG = {
+    zGapCards: 800,        // Z-distance between members
+    zGapCategory: 3000,    // Z-distance between categories
+    camSpeed: 2.5,
+    starCount: 150,
+};
 
-function getCardW() {
-    if (typeof window === 'undefined') return 210;
-    if (window.innerWidth <= 480) return 115;
-    if (window.innerWidth <= 768) return 155;
-    return 210;
-}
+// Item types for our 3D world
+type RenderItem =
+    | { type: 'category'; name: string; baseZ: number; rot: number }
+    | { type: 'card'; member: any; categoryName: string; x: number; y: number; rot: number; baseZ: number }
+    | { type: 'star'; x: number; y: number; baseZ: number };
 
-/* ═══════════════════════════════════════════
-   Build flat member list with category info
-   ═══════════════════════════════════════════ */
-interface FlatMember extends TeamMember {
-    categoryId: string;
-    categoryName: string;
-}
-
-function buildFlat(): FlatMember[] {
-    const out: FlatMember[] = [];
-    teamCategories.forEach((cat) =>
-        cat.members.forEach((m) =>
-            out.push({ ...m, categoryId: cat.id, categoryName: cat.name })
-        )
-    );
-    return out;
-}
-
-/* ═══════════════════════════════════════════
-   CARD SUB-COMPONENT
-   ═══════════════════════════════════════════ */
-function Card({ member }: { member: FlatMember }) {
-    const initials = member.name.split(' ').map((w) => w[0]).join('').slice(0, 2);
-
-    return (
-        <div className="team-card-inner">
-            {member.image ? (
-                <img src={member.image} alt={member.name} className="team-card-image" loading="lazy" />
-            ) : (
-                <div className="team-card-placeholder">{initials}</div>
-            )}
-
-            {/* Always-visible bottom gradient with name */}
-            <div className="team-card-bottom">
-                <p className="team-card-team">{member.categoryName}</p>
-                <h3 className="team-card-name">{member.name}</h3>
-                <p className="team-card-role">{member.role || (member.lead ? 'Lead' : '')}</p>
-            </div>
-
-            <div className="team-card-corner" />
-            <div className="team-card-code">
-                <span>#{String(Math.abs(member.id)).padStart(2, '0')}</span>
-            </div>
-        </div>
-    );
-}
 
 /* ═══════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════ */
 export default function TeamsPage() {
-    // Scroll to top on mount
+    // Scroll completely to top on direct link
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    const allMembers = useMemo(() => buildFlat(), []);
-    const N = allMembers.length;
+    const [fps, setFps] = useState(60);
+    const [velocity, setVelocity] = useState(0);
+    const [coord, setCoord] = useState(0);
 
-    const [activeCatId, setActiveCatId] = useState(teamCategories[0].id);
-    const scrollRef = useRef(0);          // continuous scroll value in "index" space
-    const momentumRef = useRef(0);
-    const draggingRef = useRef(false);
-    const dragXRef = useRef(0);
-    const wrapperRef = useRef<HTMLDivElement>(null);
-    const sectionRef = useRef<HTMLElement>(null);
-    const rafRef = useRef(0);
+    const worldRef = useRef<HTMLDivElement>(null);
+    const viewportRef = useRef<HTMLDivElement>(null);
+    const itemsRef = useRef<{ id: string, el: HTMLElement, item: RenderItem }[]>([]);
 
-    /* ─── Position every card ─── */
-    const layout = useCallback(() => {
-        if (!wrapperRef.current) return;
-        const cards = wrapperRef.current.children;
-        if (cards.length === 0) return;
+    const stateRef = useRef({
+        scroll: 0,
+        velocity: 0,
+        targetSpeed: 0,
+        mouseX: 0,
+        mouseY: 0,
+        lastTime: 0,
+    });
 
-        const cw = getCardW();
-        const stride = cw + CARD_GAP;
-        const containerW = wrapperRef.current.parentElement?.clientWidth ?? window.innerWidth;
-        const cx = containerW / 2;
+    // Extract items data once
+    const { renderItems, totalZLength } = React.useMemo(() => {
+        const items: RenderItem[] = [];
+        let currentZ = 0;
 
-        let bestDist = Infinity;
-        let bestIdx = 0;
-
-        for (let i = 0; i < N; i++) {
-            const card = cards[i] as HTMLElement;
-            if (!card) continue;
-
-            // Relative position from center (wrapping around)
-            let rel = i - scrollRef.current;
-            rel = ((rel % N) + N + N / 2) % N - N / 2;
-
-            const x = rel * stride + cx - cw / 2;
-            const absRel = Math.abs(rel);
-
-            // Arch: quadratic drop-off
-            const y = absRel * absRel * 6;
-
-            // Scale: center = 1.1, edges shrink
-            const scale = Math.max(1.1 - absRel * 0.08, 0.4);
-
-            // Rotation: tilt away from center
-            const rot = rel * -6;
-
-            // Opacity: center bright, edges dim
-            const opacity = Math.max(1 - absRel * 0.18, 0);
-
-            // Z-index
-            const z = Math.round(50 - absRel * 5);
-
-            gsap.set(card, {
-                x,
-                y,
-                rotation: rot,
-                scale,
-                opacity,
-                zIndex: z,
-                force3D: true,
+        teamCategories.forEach((cat) => {
+            // Drop a huge text item for the category
+            items.push({
+                type: 'category',
+                name: cat.name,
+                baseZ: currentZ,
+                rot: (Math.random() - 0.5) * 10
             });
+            currentZ -= CONFIG.zGapCategory;
 
-            if (absRel < bestDist) {
-                bestDist = absRel;
-                bestIdx = i;
-            }
+            // Drop a card for every member
+            cat.members.forEach((m) => {
+                const angle = Math.random() * Math.PI * 2;
+                // Keep cards bounded. On mobile, force tighter radius so they appear huge in center
+                const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+                const baseRadiusX = isMobile ? 80 : 200;
+                const randRadiusX = isMobile ? 120 : 300;
+                const baseRadiusY = isMobile ? 100 : 200;
+                const randRadiusY = isMobile ? 150 : 300;
+
+                const radiusX = baseRadiusX + Math.random() * randRadiusX;
+                const radiusY = baseRadiusY + Math.random() * randRadiusY;
+
+                const x = Math.cos(angle) * radiusX;
+                // squash vertical slightly, less squashing on mobile to use screen height
+                const y = Math.sin(angle) * (radiusY * (isMobile ? 0.9 : 0.7));
+                const rot = (Math.random() - 0.5) * 30;
+
+                items.push({
+                    type: 'card',
+                    member: m,
+                    categoryName: cat.name,
+                    baseZ: currentZ,
+                    x, y, rot
+                });
+                currentZ -= CONFIG.zGapCards;
+            });
+            currentZ -= CONFIG.zGapCategory; // Extra padding between groups
+        });
+
+        // Add background stars floating randomly deep into the tunnel loop
+        const loopSize = Math.abs(currentZ);
+        for (let i = 0; i < CONFIG.starCount; i++) {
+            items.push({
+                type: 'star',
+                x: (Math.random() - 0.5) * 3000,
+                y: (Math.random() - 0.5) * 3000,
+                baseZ: -Math.random() * loopSize * 1.5,
+            });
         }
 
-        // Update active tab from center card
-        const centerCat = allMembers[bestIdx]?.categoryId;
-        if (centerCat) setActiveCatId(centerCat);
-    }, [N, allMembers]);
+        return { renderItems: items, totalZLength: Math.abs(currentZ) };
+    }, []);
 
-    /* ─── Animation loop ─── */
+    // Effect for Lenis and RAF Engine
     useEffect(() => {
-        let alive = true;
+        if (!worldRef.current || !viewportRef.current) return;
 
-        const tick = () => {
-            if (!alive) return;
+        const lenis = new Lenis({
+            lerp: 0.08,
+        });
 
-            if (!draggingRef.current) {
-                if (Math.abs(momentumRef.current) > 0.005) {
-                    scrollRef.current += momentumRef.current;
-                    momentumRef.current *= MOMENTUM_DECAY;
-                } else {
-                    momentumRef.current = 0;
-                    const cw = getCardW();
-                    scrollRef.current += AUTO_SPEED / (cw + CARD_GAP);
-                }
+        lenis.on('scroll', ({ scroll, velocity: v }: any) => {
+            stateRef.current.scroll = scroll;
+            stateRef.current.targetSpeed = v;
+        });
+
+        // Mouse tracking for parallax tilt
+        const onMouseMove = (e: MouseEvent) => {
+            stateRef.current.mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            stateRef.current.mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        };
+        window.addEventListener('mousemove', onMouseMove);
+
+        let rafId: number;
+        const tick = (time: number) => {
+            lenis.raf(time);
+            const st = stateRef.current;
+
+            // Compute FPS
+            const delta = time - st.lastTime;
+            st.lastTime = time;
+            if (Math.round(time) % 10 < 1 && delta > 0) setFps(Math.round(1000 / delta));
+
+            // Smooth velocity
+            st.velocity += (st.targetSpeed - st.velocity) * 0.1;
+
+            // HUD feedback updates
+            if (Math.round(time) % 5 === 0) {
+                setVelocity(st.velocity);
+                setCoord(st.scroll);
             }
 
-            layout();
-            rafRef.current = requestAnimationFrame(tick);
-        };
+            // --- 3D RENDER UPDATES ---
 
-        rafRef.current = requestAnimationFrame(tick);
-        return () => {
-            alive = false;
-            cancelAnimationFrame(rafRef.current);
-        };
-    }, [layout]);
+            // 1. Camera Shake and Tilt
+            const shakeX = Math.random() * st.velocity * 0.1;
+            const tiltX = st.mouseY * 5 - st.velocity * 0.5;
+            const tiltY = st.mouseX * 5 + shakeX;
+            worldRef.current!.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
 
-    /* ─── Entrance ─── */
-    useEffect(() => {
-        if (!sectionRef.current) return;
-        const h = sectionRef.current.querySelector('.team-header');
-        const t = sectionRef.current.querySelector('.team-dots');
-        const s = sectionRef.current.querySelector('.team-stats');
-        if (h) gsap.fromTo(h, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.6 });
-        if (t) gsap.fromTo(t, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.2 });
-        if (s) gsap.fromTo(s, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.4 });
-    }, []);
+            // 2. Dynamic Warp Perspective FOV
+            const isMobile = window.innerWidth < 768;
+            const baseFov = isMobile ? 600 : 1000;
+            const fov = baseFov - Math.min(Math.abs(st.velocity) * 10, baseFov * 0.6);
+            viewportRef.current!.style.perspective = `${fov}px`;
 
-    /* ─── Drag ─── */
-    const onDown = useCallback((e: React.PointerEvent) => {
-        draggingRef.current = true;
-        dragXRef.current = e.clientX;
-        momentumRef.current = 0;
-        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    }, []);
+            // 3. Process every registered DOM element in 3D
+            const cameraZ = st.scroll * CONFIG.camSpeed;
 
-    const onMove = useCallback((e: React.PointerEvent) => {
-        if (!draggingRef.current) return;
-        const dx = e.clientX - dragXRef.current;
-        dragXRef.current = e.clientX;
-        const cw = getCardW();
-        const indexDelta = (dx * DRAG_SENSITIVITY) / (cw + CARD_GAP);
-        scrollRef.current -= indexDelta;
-        momentumRef.current = -indexDelta;
-    }, []);
+            itemsRef.current.forEach(({ el, item }) => {
+                if (!el) return;
 
-    const onUp = useCallback(() => {
-        draggingRef.current = false;
-    }, []);
+                // Where is this item relative to the camera pulling forward?
+                let relZ = item.baseZ + cameraZ;
 
-    /* ─── Tab click → scroll to team ─── */
-    const goToTab = useCallback(
-        (catId: string) => {
-            const idx = allMembers.findIndex((m) => m.categoryId === catId);
-            if (idx < 0) return;
+                // Determine if item is visible or culled
+                // Using pure distance, no infinite wrap so user hits bottom of page naturally
+                let vizZ = relZ;
 
-            momentumRef.current = 0;
-            const from = { v: scrollRef.current };
-            const target = idx;
+                // Opacity / Culling Math
+                let alpha = 1;
+                // Hide if super deep
+                if (vizZ < -8000) alpha = 0;
+                // Fade in from distance
+                else if (vizZ < -6000) alpha = (vizZ + 8000) / 2000;
+                // Fade out when it passes behind the camera (positive Z)
+                if (vizZ > 100 && item.type !== 'star') alpha = 1 - ((vizZ - 100) / 300);
 
-            // Find shortest path around the ring
-            let diff = target - from.v;
-            if (diff > N / 2) diff -= N;
-            if (diff < -N / 2) diff += N;
+                if (alpha < 0) alpha = 0;
 
-            gsap.to(from, {
-                v: from.v + diff,
-                duration: 0.9,
-                ease: 'power3.inOut',
-                onUpdate: () => {
-                    scrollRef.current = from.v;
-                },
+                // Only touch DOM if changed/visible to save frames
+                if (alpha > 0.01 || el.style.opacity !== '0') {
+                    el.style.opacity = alpha.toString();
+
+                    if (alpha > 0.01) {
+                        let trans = '';
+
+                        if (item.type === 'star') {
+                            const stretch = Math.max(1, Math.min(1 + Math.abs(st.velocity) * 0.1, 10));
+                            trans = `translate3d(${item.x}px, ${item.y}px, ${vizZ}px) scale3d(1, 1, ${stretch})`;
+                        } else if (item.type === 'category') {
+                            trans = `translate3d(-50%, -50%, ${vizZ}px) rotateZ(${item.rot}deg)`;
+                            // Glitch offset shift on text during high speed
+                            if (Math.abs(st.velocity) > 0.5) {
+                                const offset = st.velocity * 1.5;
+                                el.style.textShadow = `${offset}px 0 red, ${-offset}px 0 cyan`;
+                            } else {
+                                el.style.textShadow = 'none';
+                            }
+                        } else if (item.type === 'card') {
+                            // Float cards gently
+                            const t = time * 0.001;
+                            const float = Math.sin(t + item.x) * 10;
+                            // Add velocity stretch
+                            const zSkew = Math.min(Math.abs(st.velocity) * 2, 20) * Math.sign(st.velocity);
+                            trans = `translate3d(${item.x}px, ${item.y}px, ${vizZ}px) rotateZ(${item.rot}deg) rotateY(${float}deg) rotateX(${zSkew}deg)`;
+                        }
+
+                        el.style.transform = trans;
+                        el.style.visibility = 'visible';
+                    } else {
+                        el.style.visibility = 'hidden';
+                    }
+                }
             });
-        },
-        [allMembers, N]
-    );
 
-    /* ─── Hover ─── */
-    const onCardEnter = useCallback((e: React.MouseEvent) => {
-        gsap.to(e.currentTarget, { scale: '+=0.12', rotation: 0, zIndex: 200, duration: 0.25, ease: 'back.out(2)' });
-    }, []);
-    const onCardLeave = useCallback(() => {
-        // Next tick of animation loop resets everything
-    }, []);
+            rafId = requestAnimationFrame(tick);
+        };
 
-    /* ═══════════════════════════════════════════
-       RENDER
-       ═══════════════════════════════════════════ */
+        rafId = requestAnimationFrame(tick);
+
+        return () => {
+            window.removeEventListener('mousemove', onMouseMove);
+            cancelAnimationFrame(rafId);
+            lenis.destroy();
+        };
+    }, [renderItems]);
+
+
     return (
-        <section className="team-section" id="team" ref={sectionRef}>
-            <div className="team-bg-pattern" />
-            <div className="team-red-glow" />
+        <>
+            <section className="team-section" id="team">
 
-            <div className="team-content">
-                {/* Header */}
-                <div className="team-header">
-                    <h2 className="team-title">
-                        <span className="team-title-red">ALGO</span>STORM
-                        <span className="team-title-red"> 2.0</span>
-                    </h2>
-                    <p className="team-subtitle">Meet The Crew</p>
-                </div>
+                {/* OVERLAYS */}
+                <div className="team-scanlines" />
+                <div className="team-vignette" />
+                <div className="team-noise" />
 
-                {/* ── Active Team Name (animated) ── */}
-                <div className="team-active-label">
-                    <p className="team-active-name" key={activeCatId}>
-                        {teamCategories.find((c) => c.id === activeCatId)?.name}
-                    </p>
-                </div>
-
-                {/* ── Dot Navigation ── */}
-                <div className="team-dots">
-                    {teamCategories.map((cat) => (
-                        <button
-                            key={cat.id}
-                            className={`team-dot${cat.id === activeCatId ? ' team-dot--active' : ''}`}
-                            onClick={() => goToTab(cat.id)}
-                            aria-label={cat.name}
-                            title={cat.name}
-                        />
-                    ))}
-                </div>
-
-                {/* Carousel */}
-                <div className="team-carousel">
-                    <div
-                        className="team-cards-wrap"
-                        ref={wrapperRef}
-                        onPointerDown={onDown}
-                        onPointerMove={onMove}
-                        onPointerUp={onUp}
-                        onPointerLeave={onUp}
-                    >
-                        {allMembers.map((m) => (
-                            <div
-                                key={m.id}
-                                className="team-card"
-                                onMouseEnter={onCardEnter}
-                                onMouseLeave={onCardLeave}
-                            >
-                                <Card member={m} />
-                            </div>
-                        ))}
+                {/* CYBER HUD */}
+                <div className="team-hud">
+                    <div className="team-hud-top">
+                        <span>SYS.READY</span>
+                        <div className="team-hud-line" />
+                        <span>FPS: <strong>{fps}</strong></span>
                     </div>
-
-                    <div className="team-drag-hint">
-                        <svg className="team-arrow-left" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                        <span>Drag to explore</span>
-                        <svg className="team-arrow-right" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
+                    <div className="team-center-nav">
+                        SCROLL VELOCITY // <strong>{Math.abs(velocity).toFixed(2)}</strong>
+                    </div>
+                    <div className="team-hud-bottom">
+                        <span>COORD: <strong>{coord.toFixed(0)}</strong></span>
+                        <div className="team-hud-line" />
+                        <span>VER 2.0.4 [BETA]</span>
                     </div>
                 </div>
 
-                {/* Stats */}
-                <div className="team-stats">
-                    <div className="team-stat-item">
-                        <div className="team-stat-value">27</div>
-                        <div className="team-stat-label">Members</div>
-                    </div>
-                    <div className="team-stat-item">
-                        <div className="team-stat-value">9</div>
-                        <div className="team-stat-label">Teams</div>
-                    </div>
-                    <div className="team-stat-item">
-                        <div className="team-stat-value">100%</div>
-                        <div className="team-stat-label">Commitment</div>
+                {/* 3D WORLD */}
+                <div className="team-viewport" ref={viewportRef}>
+                    <div className="team-world" ref={worldRef}>
+                        {renderItems.map((item, i) => {
+                            const uid = `${item.type}-${i}`;
+
+                            // Register ref shortcut to avoid expensive DOM queries
+                            const registerRef = (el: HTMLDivElement | null) => {
+                                if (el && !itemsRef.current.find(x => x.id === uid)) {
+                                    itemsRef.current.push({ id: uid, el, item });
+                                }
+                            };
+
+                            if (item.type === 'star') {
+                                return <div key={uid} ref={registerRef} className="team-star" />;
+                            }
+
+                            if (item.type === 'category') {
+                                return (
+                                    <div key={uid} ref={registerRef} className="team-item">
+                                        <div className="team-big-text">{item.name}</div>
+                                    </div>
+                                );
+                            }
+
+                            if (item.type === 'card') {
+                                const initials = item.member.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2);
+                                return (
+                                    <div key={uid} ref={registerRef} className="team-item">
+                                        <div className="team-3d-card">
+                                            <div className="team-3d-card-header">
+                                                <span className="team-3d-card-id">ID-{String(Math.abs(item.member.id)).padStart(4, '0')}</span>
+                                                <div style={{ width: 10, height: 10, background: '#ff003c' }} />
+                                            </div>
+
+                                            <h2 className="team-member-name">{item.member.name}</h2>
+
+                                            {item.member.image ? (
+                                                <div className="team-3d-card-img-wrap">
+                                                    <img src={item.member.image} alt={item.member.name} className="team-3d-card-img" loading="lazy" />
+                                                </div>
+                                            ) : (
+                                                <div className="team-3d-card-img-wrap" style={{
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    background: '#1a1a1a', fontSize: '3rem', fontWeight: 900, color: 'rgba(255,0,60,0.2)'
+                                                }}>
+                                                    {initials}
+                                                </div>
+                                            )}
+
+                                            <div className="team-3d-card-footer">
+                                                <span>CAT: {item.categoryName}</span>
+                                                <span className="team-member-role">{item.member.role || (item.member.lead ? 'Lead' : 'Member')}</span>
+                                            </div>
+                                            <div style={{ position: 'absolute', bottom: '2rem', right: '2rem', fontSize: '4rem', opacity: 0.1, fontWeight: 900 }}>
+                                                0{i % 9}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })}
                     </div>
                 </div>
-            </div>
 
-            {/* Decorative */}
-            <div className="team-corner team-corner--tl" />
-            <div className="team-corner team-corner--tr" />
-            <div className="team-corner team-corner--bl" />
-            <div className="team-corner team-corner--br" />
+            </section>
 
-            <div className="team-side-accent team-side-accent--left">
-                <div className="team-accent-line team-accent-line--long" />
-                <div className="team-accent-line team-accent-line--medium" />
-                <div className="team-accent-line team-accent-line--short" />
-            </div>
-            <div className="team-side-accent team-side-accent--right">
-                <div className="team-accent-line team-accent-line--short" />
-                <div className="team-accent-line team-accent-line--medium" />
-                <div className="team-accent-line team-accent-line--long" />
-            </div>
-        </section>
+            {/* FAKE SCROLL PROXY FOR HEIGHT */}
+            {/* Creates scrollbar matching total Z length / cam speed */}
+            <div className="team-scroll-proxy" style={{ height: `${totalZLength / CONFIG.camSpeed + window.innerHeight * 2}px` }} />
+
+        </>
     );
 }
