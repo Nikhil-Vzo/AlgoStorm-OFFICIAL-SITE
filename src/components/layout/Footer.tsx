@@ -63,12 +63,13 @@ export default function Footer() {
                 float d = length(q - vec2(cos(a), sin(a)) * 
                                  (0.4 * smoothstep(0.0, 0.5, -q.y)));
 
-                // Modified color values here: Pure solid heist red
-                // Boosted the intensity multiplier
-                c = c + vec3(1.0, 0.05, 0.05) * (0.025 / d);
+                // Modified color values here: Pure solid heist red, made more subtle
+                // Using AlgoStorm true red (#ff003c approximate)
+                c = c + vec3(1.0, 0.0, 0.235) * (0.01 / d);
               }
 
-              vec3 col = c * c + 0.05;
+              // Deepen the contrast and remove the 0.05 gray wash on the background
+              vec3 col = c * c * c;
               gl_FragColor = vec4(col, 1.0);
             }
         `;
