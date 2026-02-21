@@ -7,8 +7,8 @@
 .s1-wrapper {
     position: relative;
     height: 380vh;
-    margin-top: -10vh;
-    /* Pulled up to eliminate dead space after Hero */
+    margin-top: -30vh;
+    /* Pulled up heavily to eliminate dead space after Hero and WhatIsAlgoStorm */
     padding: 0;
     background: var(--color-background);
 }
@@ -360,7 +360,7 @@
 @media (max-width: 768px) {
     .s1-wrapper {
         height: 350vh;
-        margin-top: -20vh;
+        margin-top: -30vh;
         /* Strongly pull up on phones to fix scroll gap */
     }
 

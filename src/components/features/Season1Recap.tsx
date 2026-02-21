@@ -44,28 +44,34 @@ export default function Season1Recap() {
             },
         });
 
-        // ── Phase 1 (0→0.10): Main Typography appears completely first ──
-        tl.to(textWrap, { opacity: 1, yPercent: 0, duration: 0.10, ease: 'power2.out' }, 0);
-        tl.fromTo(glow, { opacity: 0 }, { opacity: 1, duration: 0.10, ease: 'power2.inOut' }, 0);
+        // ── Phase 1 (0→0.15): Main Typography appears slowly first ──
+        tl.to(textWrap, { opacity: 1, yPercent: 0, duration: 0.15, ease: 'power2.out' }, 0);
+        tl.fromTo(glow, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: 'power2.inOut' }, 0);
 
-        // ── Phase 1b (0.15→0.20): Description appears ──
-        tl.fromTo(desc, { opacity: 0, yPercent: 30 }, { opacity: 1, yPercent: 0, duration: 0.05, ease: 'power2.out' }, 0.15);
+        // ── Phase 1b (0.15→0.25): Description appears ──
+        tl.fromTo(desc, { opacity: 0, yPercent: 30 }, { opacity: 1, yPercent: 0, duration: 0.10, ease: 'power2.out' }, 0.15);
 
         // Set all images far below the screen initially
         const startY = window.innerHeight * 1.5;
         const endY = -window.innerHeight * 1.5;
 
+        // ── DELAYED ENTRANCE ──
+        // The morph takes up the first ~25% of the scrub timeline of THIS section 
+        // because pinSpacing is false, so this section is scrolling *under* the morph.
+        // We delay the images so they don't even start coming up until 0.25, meaning they 
+        // won't appear on screen until the SVG has completely rolled upwards.
+
         // ── Phase 2: Pair 1 flows from bottom to top ──
-        tl.fromTo(imgs[0], { y: startY }, { y: endY, duration: 0.50, ease: 'none' }, 0.10);
-        tl.fromTo(imgs[1], { y: startY * 1.05 }, { y: endY, duration: 0.50, ease: 'none' }, 0.12);
+        tl.fromTo(imgs[0], { y: startY }, { y: endY, duration: 0.50, ease: 'none' }, 0.25);
+        tl.fromTo(imgs[1], { y: startY * 1.05 }, { y: endY, duration: 0.50, ease: 'none' }, 0.27);
 
-        // ── Phase 3: Pair 2 flows from bottom to top (Tighter overlap) ──
-        tl.fromTo(imgs[2], { y: startY }, { y: endY, duration: 0.50, ease: 'none' }, 0.22);
-        tl.fromTo(imgs[3], { y: startY * 1.05 }, { y: endY, duration: 0.50, ease: 'none' }, 0.24);
+        // ── Phase 3: Pair 2 flows from bottom to top ──
+        tl.fromTo(imgs[2], { y: startY }, { y: endY, duration: 0.50, ease: 'none' }, 0.35);
+        tl.fromTo(imgs[3], { y: startY * 1.05 }, { y: endY, duration: 0.50, ease: 'none' }, 0.37);
 
-        // ── Phase 4: Pair 3 flows from bottom to top (Tighter overlap) ──
-        tl.fromTo(imgs[4], { y: startY }, { y: endY, duration: 0.50, ease: 'none' }, 0.34);
-        tl.fromTo(imgs[5], { y: startY * 1.05 }, { y: endY, duration: 0.50, ease: 'none' }, 0.36);
+        // ── Phase 4: Pair 3 flows from bottom to top ──
+        tl.fromTo(imgs[4], { y: startY }, { y: endY, duration: 0.50, ease: 'none' }, 0.45);
+        tl.fromTo(imgs[5], { y: startY * 1.05 }, { y: endY, duration: 0.50, ease: 'none' }, 0.47);
 
         return () => {
             tl.kill();

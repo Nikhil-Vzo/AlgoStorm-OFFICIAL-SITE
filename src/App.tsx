@@ -6,6 +6,7 @@ import Lenis from 'lenis';
 import Navbar from './components/layout/Navbar';
 import Hero from './components/features/Hero';
 import WhatIsAlgoStorm from './components/features/WhatIsAlgoStorm';
+import MorphTransition from './components/features/MorphTransition';
 import Season1Recap from './components/features/Season1Recap';
 import TeamsPage from './pages/TeamsPage';
 import Footer from './components/layout/Footer';
@@ -63,7 +64,9 @@ function App() {
           <Route path="/" element={
             <>
               <Hero loading={loading} />
-              <WhatIsAlgoStorm />
+              <MorphTransition>
+                <WhatIsAlgoStorm />
+              </MorphTransition>
               <Season1Recap />
             </>
           } />
