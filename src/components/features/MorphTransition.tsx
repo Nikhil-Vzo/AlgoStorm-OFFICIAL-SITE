@@ -38,12 +38,13 @@ export default function MorphTransition({ children }: MorphTransitionProps) {
             });
 
             // SVG starts below the visible area, explicit vh ensures no 0 height bugs on load
-            gsap.set(svg, { y: '120vh', scale: 1, opacity: 1 });
+            // Starts tilted backwards and slightly scaled up, fully opaque
+            gsap.set(svg, { y: '120vh', scale: 1.2, rotationX: -40, opacity: 1 });
 
             // Phase 1: 0% to 50% scrub (user scrolls first 100vh)
-            // SVG rises to cover the screen.
+            // SVG rises to cover the screen, straightening out and snapping into normal form
             // At this EXACT moment, Season1Recap has scrolled from 100vh down to 0, placing it perfectly behind!
-            tl.to(svg, { y: '0vh', duration: 0.45, ease: 'power2.out' }, 0);
+            tl.to(svg, { y: '0vh', scale: 1, rotationX: 0, opacity: 1, duration: 0.45, ease: 'power2.out' }, 0);
 
             // Phase 2: Instant switch at 50% scrub
             // We instantly hide the pinned content (WhatIsAlgoStorm) so the transparent container
@@ -51,8 +52,8 @@ export default function MorphTransition({ children }: MorphTransitionProps) {
             tl.set(content, { autoAlpha: 0 }, 0.45);
 
             // Phase 3: 50% to 100% scrub (user scrolls next 100vh)
-            // SVG simply continues scrolling UP and off-screen, revealing Season1Recap naturally
-            tl.to(svg, { y: '-120vh', duration: 0.55, ease: 'power2.inOut' }, 0.45);
+            // SVG continues scrolling UP while zooming out intensely and tilting forward into the screen
+            tl.to(svg, { y: '-120vh', scale: 1.8, rotationX: 45, duration: 0.55, ease: 'power2.inOut' }, 0.45);
 
         }, containerRef);
 
