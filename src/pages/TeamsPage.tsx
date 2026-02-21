@@ -283,13 +283,14 @@ export default function TeamsPage() {
                             }
 
                             if (item.type === 'card') {
+                                const isNikhil = item.member && item.member.name === 'Nikhil Yadav';
                                 const initials = item.member.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2);
                                 return (
-                                    <div key={uid} ref={registerRef} className="team-item">
-                                        <div className="team-3d-card">
+                                    <div key={uid} ref={registerRef} className={`team-item ${isNikhil ? 'team-item--nikhil' : ''}`}>
+                                        <div className={`team-3d-card ${isNikhil ? 'team-3d-card--is-nikhil' : ''}`}>
                                             <div className="team-3d-card-header">
                                                 <span className="team-3d-card-id">ID-{String(Math.abs(item.member.id)).padStart(4, '0')}</span>
-                                                <div style={{ width: 10, height: 10, background: '#ff003c' }} />
+                                                <div style={{ width: 10, height: 10, background: isNikhil ? '#00f3ff' : '#ff003c' }} />
                                             </div>
 
                                             <h2 className="team-member-name">{item.member.name}</h2>

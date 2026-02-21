@@ -288,6 +288,47 @@
     font-size: 0.85rem !important;
 }
 
+/* --- SPECIAL HIGHLIGHT FOR NIKHIL YADAV --- */
+.team-item--nikhil {
+    z-index: 50;
+}
+
+.team-3d-card--is-nikhil {
+    width: 440px;
+    height: 600px;
+    border: 2px solid #00f3ff;
+    box-shadow: 0 0 50px rgba(0, 243, 255, 0.4), inset 0 0 20px rgba(0, 243, 255, 0.2);
+    animation: nikhil-pulse 3s infinite alternate;
+}
+
+@keyframes nikhil-pulse {
+    0% {
+        box-shadow: 0 0 40px rgba(0, 243, 255, 0.3), inset 0 0 10px rgba(0, 243, 255, 0.2);
+    }
+
+    100% {
+        box-shadow: 0 0 80px rgba(0, 243, 255, 0.6), inset 0 0 30px rgba(0, 243, 255, 0.4);
+        border-color: #fff;
+    }
+}
+
+.team-3d-card--is-nikhil h2 {
+    color: #00f3ff;
+    text-shadow: 0 0 15px rgba(0, 243, 255, 0.8);
+    font-size: 3.2rem;
+}
+
+.team-3d-card--is-nikhil .team-3d-card-img {
+    filter: grayscale(0%) contrast(110%);
+}
+
+.team-3d-card--is-nikhil::before,
+.team-3d-card--is-nikhil::after {
+    border-color: #00f3ff;
+    width: 20px;
+    height: 20px;
+}
+
 @media (max-width: 768px) {
     .team-3d-card {
         width: 85vw;
@@ -307,5 +348,11 @@
         width: 100vw;
         line-height: 1;
         -webkit-text-stroke: 2px rgba(255, 255, 255, 0.5);
+    }
+
+    .team-3d-card--is-nikhil {
+        width: 90vw;
+        height: 70vh;
+        max-height: 500px;
     }
 }

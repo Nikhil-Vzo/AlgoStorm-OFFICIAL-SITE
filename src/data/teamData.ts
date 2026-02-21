@@ -34,7 +34,7 @@ const teamCategories: TeamCategory[] = [
         id: 'technical',
         name: 'Technical',
         members: [
-            { id: 3, name: 'Nikhil Yadav' },
+            { id: 3, name: 'Nikhil Yadav', image: 'https://i.ibb.co/N6zN3HML/nik-1.jpg' },
         ],
     },
     {
